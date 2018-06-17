@@ -1,0 +1,23 @@
+<table>
+	<tr>
+		<th>
+			Match
+		</th>
+		<th>
+			Guess
+		</th>
+		<th>
+			Actual Result
+		</th>
+	</tr>
+	<tr *ngFor="let match of matchesService.getScheduledMatches() | async">
+		<td>
+			{{match.home_team.country}} - {{match.away_team.country}}
+		</td>
+		<td>
+		</td>
+		<td>
+			{{match.winner_code}}
+		</td>
+	</tr>
+</table>

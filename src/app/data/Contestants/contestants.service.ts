@@ -1,9 +1,9 @@
 import { Injectable, Inject } from '@angular/core';
-import { Contestant } from '../data/Contestant';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { shareReplay, refCount, map } from 'rxjs/operators';
-import { IAppConfig, APP_CONFIG } from './AppConfig';
+import { refCount, map, publishReplay } from 'rxjs/operators';
+import { Contestant } from './Contestant';
+import { APP_CONFIG, IAppConfig } from '../AppConfig';
 
 
 @Injectable({
@@ -18,11 +18,11 @@ export class ContestantsService {
 
 	public getContestants(): Observable<Contestant[]> {
 		if (this.contestants === null) {
-			this.contestants = this.http.get(this.appConfig + "/server/getContestants").pipe(
+			this.contestants = this.http.get(this.appConfig.baseUrl + "/server/getContestants").pipe(
 				map((res): Contestant[] => {
 					return null;
 				}),
-				shareReplay(),
+				publishReplay(),
 				refCount());
 		}
 		return this.contestants;
