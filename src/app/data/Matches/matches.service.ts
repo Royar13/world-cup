@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Match } from './Match';
 import { APP_CONFIG, IAppConfig } from '../AppConfig';
 import { HttpClient } from '@angular/common/http';
-import { map, refCount, publishReplay } from 'rxjs/operators';
+import { map, shareReplay, } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,14 +21,12 @@ export class MatchesService {
 				map((res: any[]): Match[] => {
 					return res.map(m => Match.fromJSON(m));
 				}),
-				publishReplay(),
-				refCount());
+				shareReplay(1));
 		}
 		return this.matches;
 	}
 
 	public getScheduledMatches(): Observable<Match[]> {
-		this.getMatches().subscribe();
 		return this.getMatches().pipe(map(matches => matches.filter(m => m.home_team.code !== "TBD" && m.away_team.code !== "TBD")));
 	}
 }

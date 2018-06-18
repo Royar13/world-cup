@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { refCount, map, publishReplay } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { Contestant } from './Contestant';
 import { APP_CONFIG, IAppConfig } from '../AppConfig';
 
@@ -22,8 +22,7 @@ export class ContestantsService {
 				map((res): Contestant[] => {
 					return null;
 				}),
-				publishReplay(),
-				refCount());
+				shareReplay(1));
 		}
 		return this.contestants;
 	}
