@@ -1,6 +1,13 @@
-.matchesTable {
+.matches-table {
 	td, th {
 		padding: 10px;
 		text-align: center;
+		vertical-align: middle;
+	}
+
+	.team-icon {
+		width: 25px;
+		height: 25px;
+		vertical-align: middle;
 	}
 }

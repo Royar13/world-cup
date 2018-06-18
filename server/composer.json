@@ -1,0 +1,15 @@
+{
+	"name": "royar/worldcup",
+	"authors": [
+		{
+			"name": "Roy Arad",
+			"email": "royar13@gmail.com"
+		}
+	],
+	"require": {},
+	"autoload": {
+		"psr-4": {
+			"App\\": "api"
+		}
+	}
+}

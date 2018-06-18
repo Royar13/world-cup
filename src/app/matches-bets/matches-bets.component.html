@@ -1,23 +1,41 @@
-<table class="matchesTable">
+<table class="matches-table">
 	<tr>
+		<th></th>
 		<th>
-			Match
+			תאריך
+		</th>
+		<th></th>
+		<th>
+			קבוצות
+		</th>
+		<th></th>
+		<th>
+			ניחוש
 		</th>
 		<th>
-			Guess
-		</th>
-		<th>
-			Actual Result
+			תוצאה
 		</th>
 	</tr>
-	<tr *ngFor="let match of matchesService.getScheduledMatches() | async">
+	<tr *ngFor="let match of matchesService.matches; index as i">
 		<td>
-			{{match.home_team.country}} - {{match.away_team.country}}
+			{{i+1}}
+		</td>
+		<td>
+			{{match.datetime}}
+		</td>
+		<td>
+			<img class="team-icon home-team-icon" [src]="'/assets/img/flags/'+match.home_team.code+'.png'">
+		</td>
+		<td>
+			{{match.home_team.hebrewName}} - {{match.away_team.hebrewName}}
+		</td>
+		<td>
+			<img class="team-icon away-team-icon" [src]="'/assets/img/flags/'+match.away_team.code+'.png'">
 		</td>
 		<td>
 		</td>
 		<td>
-			{{match.winner_code}}
+			{{match.home_team.goals}} - {{match.away_team.goals}}
 		</td>
 	</tr>
 </table>

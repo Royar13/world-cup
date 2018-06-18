@@ -10,6 +10,7 @@ import { APP_CONFIG, AppConfig } from './data/AppConfig';
 import { MatchesBetsComponent } from './matches-bets/matches-bets.component';
 import { MatchesService } from './data/Matches/matches.service';
 import { HttpClientModule } from '@angular/common/http';
+import { CountriesService } from './data/Countries/countries.service';
 
 @NgModule({
 	declarations: [
@@ -26,6 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
 	providers: [
 		ContestantsService,
 		MatchesService,
+		CountriesService,
 		{ provide: APP_CONFIG, useValue: AppConfig }
 	],
 	bootstrap: [AppComponent]

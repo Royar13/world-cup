@@ -12,6 +12,7 @@ export class MatchesBetsComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.matchesService.getMatches();
 	}
 
 }

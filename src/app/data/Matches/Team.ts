@@ -1,5 +1,6 @@
 export class Team {
 	public country: string;
+	public hebrewName: string;
 	public code: string;
 	public goals: number;
 

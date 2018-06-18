@@ -18,7 +18,7 @@ export class ContestantsService {
 
 	public getContestants(): Observable<Contestant[]> {
 		if (this.contestants === null) {
-			this.contestants = this.http.get(this.appConfig.baseUrl + "/server/getContestants").pipe(
+			this.contestants = this.http.get(this.appConfig.apiUrl + "/getContestants").pipe(
 				map((res): Contestant[] => {
 					return null;
 				}),

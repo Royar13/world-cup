@@ -2,6 +2,7 @@ import { Team } from "./Team";
 
 export class Match {
 	public fifa_id: string;
+	public datetime: string;
 	public home_team: Team;
 	public away_team: Team;
 	public winner_code: string;

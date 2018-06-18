@@ -3,11 +3,11 @@ import { InjectionToken } from "@angular/core";
 export const APP_CONFIG = new InjectionToken("AppConfig");
 
 export interface IAppConfig {
-	baseUrl: string;
+	apiUrl: string;
 	worldCupApiUrl: string;
 }
 
 export const AppConfig: IAppConfig = {
-	baseUrl: "http://localhost:4200",
+	apiUrl: "http://localhost:4200/api",
 	worldCupApiUrl: "http://worldcup.sfg.io"
 };
