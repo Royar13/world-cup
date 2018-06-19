@@ -1,5 +1,4 @@
 import { Injectable, Inject } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Match } from './Match';
 import { APP_CONFIG, IAppConfig } from '../AppConfig';
 import { HttpClient } from '@angular/common/http';
@@ -10,12 +9,9 @@ import { Country } from '../Countries/Country';
 @Injectable({
 	providedIn: 'root'
 })
-export class MatchesService {
+export class WorldCupApiService {
 	public matches: Match[] = new Array();
 	private matchesPromise: Promise<Match[]> = null;
-	public get finishedLoading(): boolean {
-		return this.matches.length > 0;
-	}
 
 	constructor(@Inject(APP_CONFIG) private appConfig: IAppConfig, private http: HttpClient, private countriesService: CountriesService) {
 

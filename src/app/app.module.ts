@@ -8,9 +8,9 @@ import { ContestantStandingsComponent } from './contestant-standings/contestant-
 import { ContestantsService } from './data/Contestants/contestants.service';
 import { APP_CONFIG, AppConfig } from './data/AppConfig';
 import { MatchesBetsComponent } from './matches-bets/matches-bets.component';
-import { MatchesService } from './data/Matches/matches.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CountriesService } from './data/Countries/countries.service';
+import { WorldCupApiService } from './data/WorldCupApi/world-cup-api.service';
 
 @NgModule({
 	declarations: [
@@ -26,7 +26,7 @@ import { CountriesService } from './data/Countries/countries.service';
 	],
 	providers: [
 		ContestantsService,
-		MatchesService,
+		WorldCupApiService,
 		CountriesService,
 		{ provide: APP_CONFIG, useValue: AppConfig }
 	],
