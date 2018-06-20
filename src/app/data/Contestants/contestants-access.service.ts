@@ -9,7 +9,7 @@ import { APP_CONFIG, IAppConfig } from '../AppConfig';
 @Injectable({
 	providedIn: 'root'
 })
-export class ContestantsService {
+export class ContestantsAccessService {
 	constructor(@Inject(APP_CONFIG) private appConfig: IAppConfig, private http: HttpClient) {
 
 	}

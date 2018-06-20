@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Match } from '../data/WorldCupApi/Match';
 import { GroupStageBet } from '../data/Bets/GroupStageBet';
 import { WorldCupApiService } from '../data/WorldCupApi/world-cup-api.service';
-import { CountriesService } from '../data/Countries/countries.service';
+import { CountriesAccessService } from '../data/Countries/countries-access.service';
 import { forkJoin } from 'rxjs';
 import { Country } from '../data/Countries/Country';
 import { reject } from 'q';
@@ -13,7 +13,7 @@ import { reject } from 'q';
 export class MatchesBetsService {
 	public groupStageBets: GroupStageBet[];
 
-	constructor(private worldCupApiService: WorldCupApiService, private countriesService: CountriesService) {
+	constructor(private worldCupApiService: WorldCupApiService, private countriesService: CountriesAccessService) {
 
 	}
 
