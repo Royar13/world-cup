@@ -2,15 +2,15 @@
 
 namespace App\Controllers;
 
-use PDO;
 use App\Services\DataAccessService;
+use PDO;
 
 class CountriesController
 {
     public function getCountries()
     {
-        $result = DataAccessService::getConnection()->query("SELECT * from countries");
+        $result = DataAccessService::getConnection()->query("SELECT * FROM countries");
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-        echo \json_encode($rows);
+        echo json_encode($rows);
     }
 }

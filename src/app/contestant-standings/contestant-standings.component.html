@@ -3,22 +3,43 @@
 		<th>
 			דירוג
 		</th>
-		<th>
+		<th class="contestant-name">
 			שם
 		</th>
 		<th>
 			ניקוד
 		</th>
+		<th></th>
+		<th></th>
 	</tr>
 	<tr *ngFor="let contestant of contestants; index as i">
 		<td>
 			{{i+1}}
 		</td>
-		<td>
+		<td class="contestant-name">
 			{{contestant.name}}
 		</td>
 		<td>
 			{{contestant.score}}
+		</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<input type="text" *ngIf="addMode" [(ngModel)]="nameField" [disabled]="executingSave">
+		</td>
+		<td></td>
+		<td>
+			<i *ngIf="!addMode" class="fa fa-plus btn add-contestant-btn" (click)="addContestantOnClick()"></i>
+			<i *ngIf="addMode&&!executingSave" class="fa fa-floppy-o btn save-contestant-btn" (click)="saveContestantOnClick()"></i>
+			<i *ngIf="addMode&&!executingSave" class="fa fa-times btn cancel-add-btn" (click)="cancelAddOnClick()"></i>
+			<i *ngIf="addMode&&executingSave" class="fa fa-spinner fa-spin"></i>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="4" class="error-message">
+			{{errorMsg}}
 		</td>
 	</tr>
 </table>

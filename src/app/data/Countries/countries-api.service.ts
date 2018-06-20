@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 @Injectable({
 	providedIn: 'root'
 })
-export class CountriesAccessService {
+export class CountriesApiService {
 	constructor(@Inject(APP_CONFIG) private appConfig: IAppConfig, private http: HttpClient) {
 
 	}
