@@ -16,18 +16,18 @@
 			תוצאה
 		</th>
 	</tr>
-	<tr *ngFor="let match of worldCupApiService.matches; index as i">
+	<tr *ngFor="let bet of matchesBetsService.groupStageBets; index as i">
 		<td>
 			{{i+1}}
 		</td>
 		<td>
-			{{match.datetime}}
+			{{bet.match.datetime}}
 		</td>
 		<td>
 			<img class="team-icon home-team-icon" [src]="'/assets/img/flags/'+match.home_team.code+'.png'">
 		</td>
 		<td>
-			{{match.home_team.hebrewName}} - {{match.away_team.hebrewName}}
+			{{bet.match.home_team.hebrewName}} - {{bet.match.away_team.hebrewName}}
 		</td>
 		<td>
 			<img class="team-icon away-team-icon" [src]="'/assets/img/flags/'+match.away_team.code+'.png'">
@@ -35,7 +35,7 @@
 		<td>
 		</td>
 		<td>
-			{{match.home_team.goals}} - {{match.away_team.goals}}
+			{{bet.match.home_team.goals}} - {{bet.match.away_team.goals}}
 		</td>
 	</tr>
 </table>

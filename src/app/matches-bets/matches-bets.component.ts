@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { WorldCupApiService } from '../data/WorldCupApi/world-cup-api.service';
+import { MatchesBetsService } from './matches-bets.service';
 
 @Component({
 	selector: 'app-matches-bets',
@@ -9,11 +9,11 @@ import { WorldCupApiService } from '../data/WorldCupApi/world-cup-api.service';
 export class MatchesBetsComponent implements OnInit {
 	public finishedLoading: boolean = false;
 
-	constructor(public worldCupApiService: WorldCupApiService) {
+	constructor(public matchesBetsService: MatchesBetsService) {
 	}
 
 	ngOnInit() {
-		this.worldCupApiService.getMatches().then(() => {
+		this.matchesBetsService.getGroupStageBets().then(() => {
 			this.finishedLoading = true;
 		});
 	}

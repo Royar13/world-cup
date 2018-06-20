@@ -9,19 +9,14 @@ import { map } from 'rxjs/operators';
 	providedIn: 'root'
 })
 export class CountriesService {
-	private countriesPromise: Promise<Country[]> = null;
-
 	constructor(@Inject(APP_CONFIG) private appConfig: IAppConfig, private http: HttpClient) {
 
 	}
 
-	public getCountries(): Promise<Country[]> {
-		if (this.countriesPromise === null) {
-			this.countriesPromise = this.http.get(this.appConfig.apiUrl + "/index.php?controller=Countries&action=getCountries").pipe(
-				map((res: any[]): Country[] => {
-					return res.map(m => Country.fromJSON(m));
-				})).toPromise();
-		}
-		return this.countriesPromise;
+	public getCountries(): Observable<Country[]> {
+		return this.http.get(this.appConfig.apiUrl + "/index.php?controller=Countries&action=getCountries").pipe(
+			map((res: any[]): Country[] => {
+				return res.map(m => Country.fromJSON(m));
+			}));
 	}
 }
