@@ -14,6 +14,15 @@ export class ContestantsApiService {
 
 	}
 
+	public getContestant(id: number): Observable<Contestant> {
+		let formData = new FormData();
+		formData.append("id", id.toString());
+		return this.http.post(this.appConfig.apiUrl + "/index.php?controller=Contestants&action=getContestant", formData).pipe(
+			map((res: any): Contestant => {
+				return Contestant.fromJSON(res);
+			}));
+	}
+
 	public getContestants(): Observable<Contestant[]> {
 		return this.http.post(this.appConfig.apiUrl + "/index.php?controller=Contestants&action=getContestants", {}).pipe(
 			map((res: any): Contestant[] => {

@@ -5,7 +5,7 @@ import { MatchesBetsComponent } from './matches-bets/matches-bets.component';
 
 const routes: Routes = [
 	{ path: "", component: MainComponent },
-	{ path: "guesses", component: MatchesBetsComponent }
+	{ path: "guesses/:id", component: MatchesBetsComponent }
 ];
 
 @NgModule({

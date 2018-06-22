@@ -5,22 +5,42 @@ import { WorldCupApiService } from '../data/WorldCupApi/world-cup-api.service';
 import { CountriesApiService } from '../data/Countries/countries-api.service';
 import { forkJoin } from 'rxjs';
 import { Country } from '../data/Countries/Country';
-import { reject } from 'q';
+import { Contestant } from '../data/Contestants/Contestant';
+import { ContestantsApiService } from '../data/Contestants/contestants-api.service';
+import { BetsApiService } from '../data/Bets/bets-api.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class MatchesBetsService {
+	private contestantId: number;
+	public contestant: Contestant;
 	public groupStageBets: GroupStageBet[];
 
-	constructor(private worldCupApiService: WorldCupApiService, private countriesService: CountriesApiService) {
+	constructor(private worldCupApiService: WorldCupApiService, private countriesApiService: CountriesApiService, private contestantsApiService: ContestantsApiService,
+		private betsApiService: BetsApiService) {
 
+	}
+
+	public init(contestantId: number): Promise<any> {
+		this.contestantId = contestantId;
+		return Promise.all([this.getContestant(), this.getGroupStageBets()]);
+	}
+
+	public getContestant(): Promise<Contestant> {
+		let promise = new Promise<Contestant>((resolve, reject) => {
+			this.contestantsApiService.getContestant(this.contestantId).subscribe(contestant => {
+				this.contestant = contestant;
+				resolve(this.contestant);
+			}, reject);
+		});
+		return promise;
 	}
 
 	public getGroupStageBets(): Promise<GroupStageBet[]> {
 		let promise = new Promise<GroupStageBet[]>((resolve, reject) => {
 			let matchesObservable = this.worldCupApiService.getGroupStageMatches();
-			let countriesObservable = this.countriesService.getCountries();
+			let countriesObservable = this.countriesApiService.getCountries();
 			forkJoin(matchesObservable, countriesObservable).subscribe(results => {
 				let matches: Match[] = results[0];
 				let countries: Country[] = results[1];
@@ -43,5 +63,21 @@ export class MatchesBetsService {
 			}, reject);
 		});
 		return promise;
+	}
+
+	public saveGroupStageBets(): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			let filledBets = this.groupStageBets.filter(b => b.home_team_goals != null);
+			this.betsApiService.saveGroupStageBets(this.contestantId, filledBets).subscribe((response) => {
+				if (response.success) {
+					resolve();
+				}
+				else {
+					reject(response.error);
+				}
+			}, () => {
+				reject("ארעה שגיאה בשמירת הניחושים");
+			});
+		});
 	}
 }

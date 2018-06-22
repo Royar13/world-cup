@@ -3,10 +3,21 @@
 namespace App\Controllers;
 
 use App\Services\DataAccessService;
+use Exception;
 use PDO;
 
 class ContestantsController
 {
+    public function getContestant()
+    {
+        $id = $_POST["id"];
+        $stmt = DataAccessService::getConnection()->prepare("SELECT * FROM contestants WHERE id=:id");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        echo json_encode($row);
+    }
+
     public function getContestants()
     {
         $result = DataAccessService::getConnection()->query("SELECT * FROM contestants");
@@ -16,23 +27,30 @@ class ContestantsController
 
     public function createContestant()
     {
-        $valid = true;
-        $name = $_POST["name"];
-        $errorMsg = "";
-        if (!$this->validateName($name, $errorMsg)) {
-            $valid = false;
-        }
+        $output = array("success" => true);
 
-        if ($valid) {
-            $stmt = DataAccessService::getConnection()->prepare("INSERT INTO contestants(name) VALUES(:name)");
-            $stmt->bindParam(":name", $name);
-            $stmt->execute();
-            $lastId = DataAccessService::getConnection()->lastInsertId();
-            $output["id"] = $lastId;
-        } else {
-            $output["error"] = $errorMsg;
+        DataAccessService::getConnection()->beginTransaction();
+        try {
+            $name = $_POST["name"];
+            $errorMsg = "";
+            $valid = $this->validateName($name, $errorMsg);
+
+            if ($valid) {
+                $stmt = DataAccessService::getConnection()->prepare("INSERT INTO contestants(name) VALUES(:name)");
+                $stmt->bindParam(":name", $name);
+                $stmt->execute();
+                $lastId = DataAccessService::getConnection()->lastInsertId();
+                $output["id"] = $lastId;
+            } else {
+                $output["success"] = false;
+                $output["error"] = $errorMsg;
+            }
+            DataAccessService::getConnection()->commit();
+        } catch (Exception $e) {
+            DataAccessService::getConnection()->rollBack();
+            $output["success"] = false;
+            $output["error"] = "ארעה שגיאה בשמירת המידע";
         }
-        $output["success"] = $valid;
 
         echo json_encode($output);
     }

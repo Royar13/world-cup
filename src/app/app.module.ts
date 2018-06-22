@@ -12,6 +12,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CountriesApiService } from './data/Countries/countries-api.service';
 import { WorldCupApiService } from './data/WorldCupApi/world-cup-api.service';
+import localeHe from '@angular/common/locales/he';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeHe);
 
 @NgModule({
 	declarations: [
@@ -27,9 +31,6 @@ import { WorldCupApiService } from './data/WorldCupApi/world-cup-api.service';
 		AppRoutingModule
 	],
 	providers: [
-		ContestantsApiService,
-		WorldCupApiService,
-		CountriesApiService,
 		{ provide: APP_CONFIG, useValue: AppConfig }
 	],
 	bootstrap: [AppComponent]

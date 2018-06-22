@@ -17,7 +17,7 @@
 			{{i+1}}
 		</td>
 		<td class="contestant-name">
-			{{contestant.name}}
+			<a [routerLink]="['/guesses', contestant.id]">{{contestant.name}}</a>
 		</td>
 		<td>
 			{{contestant.score}}

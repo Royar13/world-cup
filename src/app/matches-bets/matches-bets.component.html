@@ -1,41 +1,60 @@
-<table class="matches-table">
-	<tr>
-		<th></th>
-		<th>
-			תאריך
-		</th>
-		<th></th>
-		<th>
-			קבוצות
-		</th>
-		<th></th>
-		<th>
-			ניחוש
-		</th>
-		<th>
-			תוצאה
-		</th>
-	</tr>
-	<tr *ngFor="let bet of matchesBetsService.groupStageBets; index as i">
-		<td>
-			{{i+1}}
-		</td>
-		<td>
-			{{bet.match.datetime}}
-		</td>
-		<td>
-			<img class="team-icon home-team-icon" [src]="'/assets/img/flags/'+bet.match.home_team.code+'.png'">
-		</td>
-		<td>
-			{{bet.match.home_team.hebrewName}} - {{bet.match.away_team.hebrewName}}
-		</td>
-		<td>
-			<img class="team-icon away-team-icon" [src]="'/assets/img/flags/'+bet.match.away_team.code+'.png'">
-		</td>
-		<td>
-		</td>
-		<td>
-			{{bet.match.home_team.goals}} - {{bet.match.away_team.goals}}
-		</td>
-	</tr>
-</table>
+<div class="loading" *ngIf="loading">
+	<i class="fa fa-spinner fa-spin"></i>
+</div>
+<div class="content" *ngIf="!loading">
+	<h2>
+		{{matchesBetsService.contestant.name}}
+		<span class="save-bets-btn-init">
+			<i *ngIf="!executingSave" class="fa fa-floppy-o btn save-bets-btn" (click)="saveBetsOnClick()"></i>
+			<i *ngIf="executingSave" class="fa fa-spinner fa-spin"></i>
+		</span>
+	</h2>
+	<div class="error-message">{{errorMessage}}</div>
+	<table class="matches-table">
+		<tr>
+			<th></th>
+			<th>
+				תאריך
+			</th>
+			<th></th>
+			<th>
+				קבוצת בית
+			</th>
+			<th>ניחוש</th>
+			<th>
+				קבוצת חוץ
+			</th>
+			<th></th>
+			<th>
+				תוצאה
+			</th>
+		</tr>
+		<tr *ngFor="let bet of matchesBetsService.groupStageBets; index as i">
+			<td>
+				{{i+1}}
+			</td>
+			<td class="datetime">
+				{{bet.match.datetime | date:'dd/MM/yy HH:mm':'':'he'}}
+			</td>
+			<td class="home-team-icon-init">
+				<img class="team-icon home-team-icon" [src]="'/assets/img/flags/'+bet.match.home_team.code+'.png'">
+			</td>
+			<td>
+				{{bet.match.home_team.hebrewName}}
+			</td>
+			<td>
+				<input type="number" class="bet-field home-team-bet" [(ngModel)]="bet.home_team_goals"> -
+				<input type="number" class="bet-field away-team-bet" [(ngModel)]="bet.away_team_goals">
+			</td>
+			<td>
+				{{bet.match.away_team.hebrewName}}
+			</td>
+			<td class="away-team-icon-init">
+				<img class="team-icon away-team-icon" [src]="'/assets/img/flags/'+bet.match.away_team.code+'.png'">
+			</td>
+			<td>
+				<span *ngIf="bet.match.status==='completed'">{{bet.match.home_team.goals}} - {{bet.match.away_team.goals}}</span>
+			</td>
+		</tr>
+	</table>
+</div>
