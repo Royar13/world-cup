@@ -5,14 +5,15 @@
 	<form #groupStageBetsForm="ngForm" (ngSubmit)="onSubmit(groupStageBetsForm)">
 		<h2>
 			{{matchesBetsService.contestant.name}}
-			<span class="save-bets-btn-init">
-				<button type="submit" class="btn save-bets-btn">
-					<i *ngIf="!executingSave" class="fa fa-floppy-o"></i>
-				</button>
-				<i *ngIf="executingSave" class="fa fa-spinner fa-spin"></i>
-			</span>
 		</h2>
-		<div class="error-message top-error-message">{{errorMessage}}</div>
+		<div class="save-bets-btn-init">
+			<button type="submit" class="btn text-btn" [disabled]="executingSave">
+				<i class="fa fa-floppy-o"></i>
+				שמור
+			</button>
+			<i [style.visibility]="executingSave ? 'visible' : 'hidden'" class="fa fa-spinner fa-spin"></i>
+		</div>
+		<div class="error-message top-error-message">{{errorMsg}}</div>
 		<table class="matches-table">
 			<tr>
 				<th></th>
@@ -47,12 +48,10 @@
 					{{bet.match.home_team.hebrewName}}
 				</td>
 				<td>
-					<div class="bet-field-group" [ngModelGroup]="'match-bet'+i" [appBetGoalsValidator]="bet" #betFieldGroup="ngModelGroup">
-						<input type="number" [name]="'home-team-bet'+i" class="bet-field home-team-bet" min="0" max="100" [(ngModel)]="bet.home_team_goals"
-						 [disabled]="executingSave"> -
-						<input type="number" [name]="'away-team-bet'+i" class="bet-field away-team-bet" min="0" max="100" [(ngModel)]="bet.away_team_goals"
-						 [disabled]="executingSave">
-					</div>
+					<input type="number" [name]="'home-team-bet'+i" class="bet-field home-team-bet" min="0" max="100" [(ngModel)]="bet.home_team_goals"
+					 [disabled]="executingSave" required #homeTeamBet="ngModel"> -
+					<input type="number" [name]="'away-team-bet'+i" class="bet-field away-team-bet" min="0" max="100" [(ngModel)]="bet.away_team_goals"
+					 [disabled]="executingSave" required #awayTeamBet="ngModel">
 				</td>
 				<td>
 					{{bet.match.away_team.hebrewName}}
@@ -64,10 +63,20 @@
 					<span *ngIf="bet.match.status==='completed'">{{bet.match.home_team.goals}} - {{bet.match.away_team.goals}}</span>
 				</td>
 				<td>
-					<div *ngIf="betFieldGroup.invalid&&bet.submitted" class="error-message">
-						<div *ngIf="betFieldGroup.errors.betGoals">
-							יש למלא גולים של שתי הנבחרות
-						</div>
+					<div *ngIf="(homeTeamBet.invalid||awayTeamBet.invalid)&&submittedBets" class="error-message">
+						יש למלא שדות
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="9">
+					<div class="error-message">{{errorMsg}}</div>
+					<div class="save-bets-btn-init">
+						<button type="submit" class="btn text-btn" [disabled]="executingSave">
+							<i class="fa fa-floppy-o"></i>
+							שמור
+						</button>
+						<i [style.visibility]="executingSave ? 'visible' : 'hidden'" class="fa fa-spinner fa-spin"></i>
 					</div>
 				</td>
 			</tr>

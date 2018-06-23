@@ -87,7 +87,7 @@ export class MatchesBetsService {
 		});
 	}
 
-	public getFilledBets(): GroupStageBet[] {
+	private getFilledBets(): GroupStageBet[] {
 		return this.groupStageBets.filter(b => b.home_team_goals != null || b.away_team_goals != null);
 	}
 }

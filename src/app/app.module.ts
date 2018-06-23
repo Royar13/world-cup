@@ -14,7 +14,6 @@ import { CountriesApiService } from './data/Countries/countries-api.service';
 import { WorldCupApiService } from './data/WorldCupApi/world-cup-api.service';
 import localeHe from '@angular/common/locales/he';
 import { registerLocaleData } from '@angular/common';
-import { BetGoalsValidatorDirective } from './matches-bets/bet-goals-validator.directive';
 
 registerLocaleData(localeHe);
 
@@ -23,8 +22,7 @@ registerLocaleData(localeHe);
 		AppComponent,
 		MainComponent,
 		ContestantStandingsComponent,
-		MatchesBetsComponent,
-		BetGoalsValidatorDirective
+		MatchesBetsComponent
 	],
 	imports: [
 		BrowserModule,

@@ -3,15 +3,6 @@
 	padding: 10px;
 }
 
-h2 {
-	vertical-align: middle;
-
-	.save-bets-btn-init {
-		margin-right: 15px;
-		font-size: 15px;
-	}
-}
-
 .matches-table {
 	td, th {
 		padding: 10px;
@@ -43,6 +34,15 @@ h2 {
 		width: 25px;
 		height: 25px;
 		vertical-align: middle;
+	}
+}
+
+.save-bets-btn-init {
+	width: 700px;
+	text-align: left;
+
+	.btn {
+		margin-left: 4px;
 	}
 }
 
