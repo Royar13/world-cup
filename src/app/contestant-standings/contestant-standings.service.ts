@@ -13,6 +13,7 @@ import { Match } from '../data/WorldCupApi/Match';
 export class ContestantStandingsService {
 	private contestants: Contestant[] = new Array();
 	private matches: Match[];
+	public contestantsStandings: Contestant[] = new Array();
 
 	constructor(private contestansApiService: ContestantsApiService, private betsApiService: BetsApiService, private worldCupApiService: WorldCupApiService) {
 
@@ -44,7 +45,8 @@ export class ContestantStandingsService {
 						return contestant;
 					});
 
-				resolve(this.contestants);
+				this.calculateStandings();
+				resolve(this.contestantsStandings);
 			}, reject);
 		});
 		return promise;
@@ -56,6 +58,7 @@ export class ContestantStandingsService {
 				if (response.success) {
 					let newContestant: Contestant = new Contestant(response.id, name);
 					this.contestants.push(newContestant);
+					this.calculateStandings();
 					resolve();
 				}
 				else {
@@ -129,11 +132,30 @@ export class ContestantStandingsService {
 		}
 	}
 
-	public getContestantsStandings(): Contestant[] {
-		return this.contestants.slice().sort(this.compareContestants);
+	private calculateStandings(): void {
+		this.calculateContestantsStandings();
+		this.calculateContestantsPreviousStandings();
 	}
 
-	public getContestantsPreviousStandings(): Contestant[] {
-		return this.contestants.slice().sort(this.compareContestantsPreviousScores);
+	private calculateContestantsStandings(): void {
+		this.contestantsStandings = this.contestants.slice().sort(this.compareContestants);
+		let rank = 1;
+		this.contestantsStandings.forEach((contestant, index) => {
+			if (index > 0 && contestant.score < this.contestantsStandings[index - 1].score) {
+				rank++;
+			}
+			contestant.rank = rank;
+		});
+	}
+
+	private calculateContestantsPreviousStandings(): void {
+		let contestants = this.contestants.slice().sort(this.compareContestantsPreviousScores);
+		let previousRank = 1;
+		contestants.forEach((contestant, index) => {
+			if (index > 0 && contestant.previousScore < contestants[index - 1].previousScore) {
+				previousRank++;
+			}
+			contestant.previousRank = previousRank;
+		});
 	}
 }

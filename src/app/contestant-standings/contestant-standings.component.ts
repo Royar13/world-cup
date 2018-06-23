@@ -58,8 +58,6 @@ export class ContestantStandingsComponent implements OnInit {
 	}
 
 	public getStandingsDiff(contestant: Contestant): number {
-		let index = this.contestantStandingsService.getContestantsStandings().indexOf(contestant);
-		let previousIndex = this.contestantStandingsService.getContestantsPreviousStandings().indexOf(contestant);
-		return previousIndex - index;
+		return contestant.previousRank - contestant.rank;
 	}
 }

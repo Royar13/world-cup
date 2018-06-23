@@ -14,9 +14,11 @@
 		</th>
 		<th></th>
 	</tr>
-	<tr *ngFor="let contestant of contestantStandingsService.getContestantsStandings(); index as i">
+	<tr *ngFor="let contestant of contestantStandingsService.contestantsStandings; index as i">
 		<td class="rank">
-			{{i+1}}
+			<div *ngIf="i==0||contestantStandingsService.contestantsStandings[i-1].rank<contestant.rank">
+				{{contestant.rank}}
+			</div>
 		</td>
 		<td class="standings-diff" [ngClass]="{'positive-diff': getStandingsDiff(contestant)>0, 'negative-diff': getStandingsDiff(contestant)<0}">
 			<div *ngIf="getStandingsDiff(contestant)!==0">

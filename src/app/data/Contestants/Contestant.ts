@@ -5,6 +5,8 @@ export class Contestant {
 	public name: string;
 	public score: number = 0;
 	public previousScore: number = 0;
+	public rank: number = 0;
+	public previousRank: number = 0;
 	public groupStageBets: GroupStageBet[] = new Array();
 
 	constructor(id: number, name: string) {
