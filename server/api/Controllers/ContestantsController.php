@@ -55,6 +55,14 @@ class ContestantsController
         echo json_encode($output);
     }
 
+    public function deleteContestant()
+    {
+        $id = $_POST["id"];
+        $stmt = DataAccessService::getConnection()->prepare("DELETE FROM contestants WHERE id=:id");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+    }
+
     private function validateName(&$name, &$errorMsg)
     {
         if (!isset($name)) {

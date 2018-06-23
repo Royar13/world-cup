@@ -30,6 +30,12 @@ export class ContestantsApiService {
 			}));
 	}
 
+	public deleteContestant(id: number): Observable<any> {
+		let formData = new FormData();
+		formData.append("id", id.toString());
+		return this.http.post(this.appConfig.apiUrl + "/index.php?controller=Contestants&action=deleteContestant", formData);
+	}
+
 	public createContestant(name: string): Observable<any> {
 		let formData = new FormData();
 		formData.append("name", name);

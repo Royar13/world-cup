@@ -9,8 +9,10 @@ import { Router } from '@angular/router';
 	styleUrls: ['./contestant-standings.component.scss']
 })
 export class ContestantStandingsComponent implements OnInit {
+	public loading: boolean = true;
 	public addMode: boolean = false;
 	public executingSave: boolean = false;
+	public executingDeleteId: number;
 	public nameField: string;
 	public errorMsg: string;
 
@@ -19,7 +21,9 @@ export class ContestantStandingsComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.contestantStandingsService.init();
+		this.contestantStandingsService.init().then(() => {
+			this.loading = false;
+		});
 	}
 
 	public addContestantOnClick(): void {
@@ -48,8 +52,15 @@ export class ContestantStandingsComponent implements OnInit {
 		this.router.navigate(["/guesses", contestant.id]);
 	}
 
-	public deleteContestantOnClick(): void {
-
+	public deleteContestantOnClick(contestant: Contestant): void {
+		if (confirm("האם אתה בטוח שברצונך למחוק את המתחרה \"" + contestant.name + "\"?")) {
+			this.executingDeleteId = contestant.id;
+			this.contestantStandingsService.deleteContestant(contestant).then(() => {
+				this.executingDeleteId = null;
+			}, () => {
+				this.executingDeleteId = null;
+			});
+		}
 	}
 
 	private resetFields(): void {

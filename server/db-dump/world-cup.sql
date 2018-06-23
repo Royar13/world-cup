@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 23, 2018 at 06:49 PM
+-- Generation Time: Jun 23, 2018 at 08:44 PM
 -- Server version: 5.7.11
 -- PHP Version: 7.0.4
 
@@ -125,12 +125,12 @@ ALTER TABLE `group_stage_bets`
 -- AUTO_INCREMENT for table `contestants`
 --
 ALTER TABLE `contestants`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 --
 -- AUTO_INCREMENT for table `group_stage_bets`
 --
 ALTER TABLE `group_stage_bets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1834;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2062;
 --
 -- Constraints for dumped tables
 --
@@ -139,7 +139,7 @@ ALTER TABLE `group_stage_bets`
 -- Constraints for table `group_stage_bets`
 --
 ALTER TABLE `group_stage_bets`
-  ADD CONSTRAINT `group_stage_bets_ibfk_1` FOREIGN KEY (`contestant_id`) REFERENCES `contestants` (`id`);
+  ADD CONSTRAINT `group_stage_bets_ibfk_1` FOREIGN KEY (`contestant_id`) REFERENCES `contestants` (`id`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -70,6 +70,18 @@ export class ContestantStandingsService {
 		});
 	}
 
+	public deleteContestant(contestant: Contestant): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			this.contestansApiService.deleteContestant(contestant.id).subscribe(() => {
+				this.contestants = this.contestants.filter(c => c !== contestant);
+				this.calculateStandings();
+				resolve();
+			}, () => {
+				reject();
+			});
+		});
+	}
+
 	private calculatesBetsScore(groupStageBets: GroupStageBet[]): number {
 		let score: number = 0;
 		groupStageBets.forEach(bet => {
@@ -96,7 +108,7 @@ export class ContestantStandingsService {
 	}
 
 	private calculatePreviousScore(contestant: Contestant): number {
-		let numOfGamesAgo: number = 3;
+		let numOfGamesAgo: number = 5;
 		//get all the games before this match index
 		let lastMatchIndex: number = this.matches.findIndex(m => m.status !== "completed");
 		if (lastMatchIndex === undefined) {
@@ -142,7 +154,7 @@ export class ContestantStandingsService {
 		let rank = 1;
 		this.contestantsStandings.forEach((contestant, index) => {
 			if (index > 0 && contestant.score < this.contestantsStandings[index - 1].score) {
-				rank++;
+				rank = index + 1;
 			}
 			contestant.rank = rank;
 		});
@@ -153,7 +165,7 @@ export class ContestantStandingsService {
 		let previousRank = 1;
 		contestants.forEach((contestant, index) => {
 			if (index > 0 && contestant.previousScore < contestants[index - 1].previousScore) {
-				previousRank++;
+				previousRank = index + 1;
 			}
 			contestant.previousRank = previousRank;
 		});

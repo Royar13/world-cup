@@ -21,6 +21,7 @@ export class MatchesBetsComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.route.params.subscribe(params => {
+			this.loading = true;
 			this.matchesBetsService.init(parseInt(params["id"])).then(() => {
 				this.loading = false;
 			});
