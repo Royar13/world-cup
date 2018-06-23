@@ -47,8 +47,7 @@
 					{{bet.match.home_team.hebrewName}}
 				</td>
 				<td>
-					<div class="bet-field-group" [ngModelGroup]="'match-bet'+i" [appBetGoalsValidator]="bet.home_team_goals" [awayTeamGoals]="bet.away_team_goals"
-					 #betFieldGroup="ngModelGroup">
+					<div class="bet-field-group" [ngModelGroup]="'match-bet'+i" [appBetGoalsValidator]="bet" #betFieldGroup="ngModelGroup">
 						<input type="number" [name]="'home-team-bet'+i" class="bet-field home-team-bet" min="0" max="100" [(ngModel)]="bet.home_team_goals"
 						 [disabled]="executingSave"> -
 						<input type="number" [name]="'away-team-bet'+i" class="bet-field away-team-bet" min="0" max="100" [(ngModel)]="bet.away_team_goals"
