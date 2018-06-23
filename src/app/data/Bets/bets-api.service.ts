@@ -14,10 +14,17 @@ export class BetsApiService {
 
 	}
 
-	public getGroupStageBets(contestantId: number): Observable<GroupStageBet[]> {
+	public getGroupStageBets(): Observable<GroupStageBet[]> {
+		return this.http.post(this.appConfig.apiUrl + "/index.php?controller=Bets&action=getGroupStageBets", {}).pipe(
+			map((res: any[]): GroupStageBet[] => {
+				return res.map(b => GroupStageBet.fromJSON(b));
+			}));
+	}
+
+	public getGroupStageBetsByContestant(contestantId: number): Observable<GroupStageBet[]> {
 		let formData = new FormData();
 		formData.append("contestantId", contestantId.toString());
-		return this.http.post(this.appConfig.apiUrl + "/index.php?controller=Bets&action=getGroupStageBets", formData).pipe(
+		return this.http.post(this.appConfig.apiUrl + "/index.php?controller=Bets&action=getGroupStageBetsByContestant", formData).pipe(
 			map((res: any[]): GroupStageBet[] => {
 				return res.map(b => GroupStageBet.fromJSON(b));
 			}));

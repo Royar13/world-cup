@@ -40,7 +40,7 @@ class ContestantsController
                 $stmt->bindParam(":name", $name);
                 $stmt->execute();
                 $lastId = DataAccessService::getConnection()->lastInsertId();
-                $output["id"] = $lastId;
+                $output["id"] = intval($lastId);
             } else {
                 $output["success"] = false;
                 $output["error"] = $errorMsg;

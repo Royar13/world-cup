@@ -27,7 +27,7 @@ export class MatchesBetsService {
 		return Promise.all([this.getContestant(), this.getGroupStageBets()]);
 	}
 
-	public getContestant(): Promise<Contestant> {
+	private getContestant(): Promise<Contestant> {
 		let promise = new Promise<Contestant>((resolve, reject) => {
 			this.contestantsApiService.getContestant(this.contestantId).subscribe(contestant => {
 				this.contestant = contestant;
@@ -37,11 +37,11 @@ export class MatchesBetsService {
 		return promise;
 	}
 
-	public getGroupStageBets(): Promise<GroupStageBet[]> {
+	private getGroupStageBets(): Promise<GroupStageBet[]> {
 		let promise = new Promise<GroupStageBet[]>((resolve, reject) => {
 			let matchesObservable = this.worldCupApiService.getGroupStageMatches();
 			let countriesObservable = this.countriesApiService.getCountries();
-			let betsObservable = this.betsApiService.getGroupStageBets(this.contestantId);
+			let betsObservable = this.betsApiService.getGroupStageBetsByContestant(this.contestantId);
 			forkJoin(matchesObservable, countriesObservable, betsObservable).subscribe(results => {
 				let matches: Match[] = results[0];
 				let countries: Country[] = results[1];
@@ -73,7 +73,7 @@ export class MatchesBetsService {
 
 	public saveGroupStageBets(): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			let filledBets: GroupStageBet[] = this.getFilledBets();
+			let filledBets: GroupStageBet[] = this.groupStageBets.filter(b => b.isFilled());
 			this.betsApiService.saveGroupStageBets(this.contestantId, filledBets).subscribe((response) => {
 				if (response.success) {
 					resolve();
@@ -85,9 +85,5 @@ export class MatchesBetsService {
 				reject("ארעה שגיאה בשמירת הניחושים");
 			});
 		});
-	}
-
-	private getFilledBets(): GroupStageBet[] {
-		return this.groupStageBets.filter(b => b.home_team_goals != null || b.away_team_goals != null);
 	}
 }

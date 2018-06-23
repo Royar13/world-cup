@@ -10,6 +10,13 @@ class BetsController
 {
     public function getGroupStageBets()
     {
+        $result = DataAccessService::getConnection()->query("SELECT * FROM group_stage_bets");
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($rows);
+    }
+
+    public function getGroupStageBetsByContestant()
+    {
         $contestantId = $_POST["contestantId"];
         $stmt = DataAccessService::getConnection()->prepare("SELECT * FROM group_stage_bets WHERE contestant_id=:contestant_id");
         $stmt->bindParam(":contestant_id", $contestantId);

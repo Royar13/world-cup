@@ -14,7 +14,7 @@ export class CountriesApiService {
 	}
 
 	public getCountries(): Observable<Country[]> {
-		return this.http.get(this.appConfig.apiUrl + "/index.php?controller=Countries&action=getCountries").pipe(
+		return this.http.post(this.appConfig.apiUrl + "/index.php?controller=Countries&action=getCountries", {}).pipe(
 			map((res: any[]): Country[] => {
 				return res.map(m => Country.fromJSON(m));
 			}));

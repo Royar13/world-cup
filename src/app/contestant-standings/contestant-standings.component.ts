@@ -8,20 +8,17 @@ import { Contestant } from '../data/Contestants/Contestant';
 	styleUrls: ['./contestant-standings.component.scss']
 })
 export class ContestantStandingsComponent implements OnInit {
-	public get contestants(): Contestant[] {
-		return this.contestantStandingsService.contestants;
-	}
 	public addMode: boolean = false;
 	public executingSave: boolean = false;
 	public nameField: string;
 	public errorMsg: string;
 
-	constructor(private contestantStandingsService: ContestantStandingsService) {
+	constructor(public contestantStandingsService: ContestantStandingsService) {
 
 	}
 
 	ngOnInit() {
-		this.contestantStandingsService.getContestants();
+		this.contestantStandingsService.init();
 	}
 
 	public addContestantOnClick(): void {
@@ -49,5 +46,11 @@ export class ContestantStandingsComponent implements OnInit {
 	private resetFields(): void {
 		this.nameField = "";
 		this.errorMsg = "";
+	}
+
+	public getStandingsDiff(contestant: Contestant): number {
+		let index = this.contestantStandingsService.getContestantsStandings().indexOf(contestant);
+		let previousIndex = this.contestantStandingsService.getContestantsPreviousStandings().indexOf(contestant);
+		return previousIndex - index;
 	}
 }

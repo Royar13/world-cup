@@ -1,7 +1,6 @@
 .contestants-table {
 	td, th {
 		padding: 10px;
-		text-align: center;
 		vertical-align: middle;
 
 		.cancel-add-btn {
@@ -13,7 +12,43 @@
 		border-top: 1px solid #aaa;
 	}
 
+	td:not(:last-child):not(:nth-child(4)), th:not(:last-child):not(:nth-child(4)) {
+		border-left: 1px solid #eee;
+	}
+
 	.contestant-name {
-		min-width: 200px;
+		min-width: 150px;
+	}
+
+	td.contestant-name {
+		text-align: right;
+	}
+
+	.standings-diff {
+		text-align: right;
+		padding-right: 15px;
+		direction: ltr;
+
+		.arrow {
+			display: none;
+		}
+	}
+
+	.standings-diff.positive-diff {
+		color: green;
+		.fa-long-arrow-up {
+			display: inline;
+		}
+	}
+
+	.standings-diff.negative-diff {
+		color: red;
+		.fa-long-arrow-down {
+			display: inline;
+		}
+	}
+
+	.name-field {
+		width: 130px;
 	}
 }

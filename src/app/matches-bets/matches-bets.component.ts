@@ -32,7 +32,7 @@ export class MatchesBetsComponent implements OnInit, OnDestroy {
 	}
 
 	public onSubmit(groupStageBetsForm: FormControl): void {
-		if (groupStageBetsForm.valid) {
+		if (groupStageBetsForm.valid || true) {
 			this.errorMsg = "";
 			this.executingSave = true;
 			this.matchesBetsService.saveGroupStageBets().then(() => {

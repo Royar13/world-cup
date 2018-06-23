@@ -13,6 +13,8 @@ class DataAccessService
         if (self::$connection == null) {
             try {
                 self::$connection = new PDO("mysql:host=" . Config::$dbServerName . ";dbname=" . Config::$dbName, Config::$dbUserName, Config::$dbPassword);
+                self::$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+                self::$connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
                 self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 self::$connection->query("SET NAMES 'utf8'");
             } catch (Exception $e) {

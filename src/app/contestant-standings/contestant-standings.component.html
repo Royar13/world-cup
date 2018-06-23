@@ -3,6 +3,9 @@
 		<th>
 			דירוג
 		</th>
+		<th>
+			שינוי
+		</th>
 		<th class="contestant-name">
 			שם
 		</th>
@@ -10,11 +13,17 @@
 			ניקוד
 		</th>
 		<th></th>
-		<th></th>
 	</tr>
-	<tr *ngFor="let contestant of contestants; index as i">
+	<tr *ngFor="let contestant of contestantStandingsService.getContestantsStandings(); index as i">
 		<td>
 			{{i+1}}
+		</td>
+		<td class="standings-diff" [ngClass]="{'positive-diff': getStandingsDiff(contestant)>0, 'negative-diff': getStandingsDiff(contestant)<0}">
+			<div *ngIf="getStandingsDiff(contestant)!==0">
+				{{getStandingsDiff(contestant)}}
+				<i class="fa fa-long-arrow-up arrow"></i>
+				<i class="fa fa-long-arrow-down arrow"></i>
+			</div>
 		</td>
 		<td class="contestant-name">
 			<a [routerLink]="['/guesses', contestant.id]">{{contestant.name}}</a>
@@ -26,11 +35,11 @@
 	</tr>
 	<tr>
 		<td></td>
-		<td>
-			<input type="text" *ngIf="addMode" [(ngModel)]="nameField" [disabled]="executingSave">
-		</td>
 		<td></td>
 		<td>
+			<input type="text" class="name-field" *ngIf="addMode" [(ngModel)]="nameField" [disabled]="executingSave">
+		</td>
+		<td colspan="2">
 			<button *ngIf="!addMode" class="btn add-contestant-btn" (click)="addContestantOnClick()">
 				<i class="fa fa-plus"></i>
 			</button>
@@ -44,7 +53,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="4" class="error-message">
+		<td colspan="5" class="error-message">
 			{{errorMsg}}
 		</td>
 	</tr>
