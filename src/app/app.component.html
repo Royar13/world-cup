@@ -1,2 +1,14 @@
-<h1>מונדיאל 2018</h1>
-<router-outlet></router-outlet>
+<div class="panel">
+	<h1>
+		מונדיאל 2018
+		<div class="controls">
+			<button *ngIf="!isHome()" class="btn text-btn" (click)="goHome()">
+				<i class="fa fa-home"></i>
+				בית
+			</button>
+		</div>
+	</h1>
+	<div class="content-container">
+		<router-outlet></router-outlet>
+	</div>
+</div>

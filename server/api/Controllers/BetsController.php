@@ -42,7 +42,7 @@ class BetsController
                     $stmt = DataAccessService::getConnection()->prepare(
                         "INSERT INTO group_stage_bets(contestant_id, fifa_match_id, home_team_goals, away_team_goals)
 						VALUES(:contestant_id, :fifa_match_id, :home_team_goals, :away_team_goals)
-						ON DUPLICATE KEY UPDATE home_team_goals=:home_team_goals, away_team_goals=:away_team_goals"
+						ON DUPLICATE KEY UPDATE home_team_goals=VALUES(home_team_goals), away_team_goals=VALUES(away_team_goals)"
                     );
                     $stmt->bindParam(":contestant_id", $contestantId);
                     $stmt->bindParam(":fifa_match_id", $bet->fifa_match_id);

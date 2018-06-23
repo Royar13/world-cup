@@ -1,6 +1,16 @@
 .contestants-table {
+	box-shadow: 0px 0px 10px #999;
+	margin: 0 auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+
+	th {
+		background: linear-gradient(#777, #555) ;
+		color: #fff;
+	}
+
 	td, th {
-		padding: 10px;
+		padding: 10px 20px;
 		vertical-align: middle;
 
 		.cancel-add-btn {
@@ -8,16 +18,33 @@
 		}
 	}
 
-	tr:not(:last-child) td {
+	td {
 		border-top: 1px solid #aaa;
+		background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(220, 220, 220, 0.5));
 	}
 
-	td:not(:last-child):not(:nth-child(4)), th:not(:last-child):not(:nth-child(4)) {
-		border-left: 1px solid #eee;
+	tr:first-child th:first-child {
+		border-top-right-radius: 5px;
+	}
+	
+	tr:first-child th:last-child {
+		border-top-left-radius: 5px;
+	}
+
+	td:not(:last-child), th:not(:last-child) {
+		border-left: 1px solid #ccc;
+	}
+
+	.add-contestant-row td {
+		height: 26px;
 	}
 
 	.contestant-name {
 		min-width: 150px;
+	}
+
+	.rank {
+		text-align: center;
 	}
 
 	td.contestant-name {
@@ -26,12 +53,16 @@
 
 	.standings-diff {
 		text-align: right;
-		padding-right: 15px;
+		padding-right: 23px;
 		direction: ltr;
 
 		.arrow {
 			display: none;
 		}
+	}
+
+	.delete-contestant-btn {
+		margin-right: 20px;
 	}
 
 	.standings-diff.positive-diff {
@@ -51,4 +82,8 @@
 	.name-field {
 		width: 130px;
 	}
+}
+
+.error-message {
+	text-align: center;
 }

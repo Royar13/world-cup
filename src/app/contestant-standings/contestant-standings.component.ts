@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ContestantStandingsService } from './contestant-standings.service';
 import { Contestant } from '../data/Contestants/Contestant';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-contestants-rank',
@@ -13,7 +14,7 @@ export class ContestantStandingsComponent implements OnInit {
 	public nameField: string;
 	public errorMsg: string;
 
-	constructor(public contestantStandingsService: ContestantStandingsService) {
+	constructor(public contestantStandingsService: ContestantStandingsService, private router: Router) {
 
 	}
 
@@ -41,6 +42,14 @@ export class ContestantStandingsComponent implements OnInit {
 	public cancelAddOnClick(): void {
 		this.resetFields();
 		this.addMode = false;
+	}
+
+	public editContestantOnClick(contestant: Contestant): void {
+		this.router.navigate(["/guesses", contestant.id]);
+	}
+
+	public deleteContestantOnClick(): void {
+
 	}
 
 	private resetFields(): void {

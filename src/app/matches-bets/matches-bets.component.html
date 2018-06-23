@@ -4,15 +4,15 @@
 <div class="content" *ngIf="!loading">
 	<form #groupStageBetsForm="ngForm" (ngSubmit)="onSubmit(groupStageBetsForm)">
 		<h2>
-			{{matchesBetsService.contestant.name}}
+			הניחושים של {{matchesBetsService.contestant.name}}
+			<div class="save-bets-btn-init top-save-bets-btn-init">
+				<button type="submit" class="btn text-btn" [disabled]="executingSave">
+					<i class="fa fa-floppy-o"></i>
+					שמור
+				</button>
+				<i [style.visibility]="executingSave ? 'visible' : 'hidden'" class="fa fa-spinner fa-spin"></i>
+			</div>
 		</h2>
-		<div class="save-bets-btn-init">
-			<button type="submit" class="btn text-btn" [disabled]="executingSave">
-				<i class="fa fa-floppy-o"></i>
-				שמור
-			</button>
-			<i [style.visibility]="executingSave ? 'visible' : 'hidden'" class="fa fa-spinner fa-spin"></i>
-		</div>
 		<div class="error-message top-error-message">{{errorMsg}}</div>
 		<table class="matches-table">
 			<tr>
@@ -71,7 +71,7 @@
 			<tr>
 				<td colspan="9">
 					<div class="error-message">{{errorMsg}}</div>
-					<div class="save-bets-btn-init">
+					<div class="save-bets-btn-init bottom-save-bets-btn-init">
 						<button type="submit" class="btn text-btn" [disabled]="executingSave">
 							<i class="fa fa-floppy-o"></i>
 							שמור

@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+	background: url("assets/img/fifa-bg.jpg") no-repeat;
+	background-position: right top;
+	object-fit: cover;
+}
+
 body, input {
 	font-family: Arial;
 	font-size: 15px;
