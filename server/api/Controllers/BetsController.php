@@ -4,9 +4,20 @@ namespace App\Controllers;
 
 use App\Services\DataAccessService;
 use Exception;
+use PDO;
 
 class BetsController
 {
+    public function getGroupStageBets()
+    {
+        $contestantId = $_POST["contestantId"];
+        $stmt = DataAccessService::getConnection()->prepare("SELECT * FROM group_stage_bets WHERE contestant_id=:contestant_id");
+        $stmt->bindParam(":contestant_id", $contestantId);
+        $stmt->execute();
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($row);
+    }
+
     public function saveGroupStageBets()
     {
         $output = array("success" => true);
@@ -15,8 +26,9 @@ class BetsController
         try {
             $contestantId = $_POST["contestantId"];
             $bets = json_decode($_POST["bets"]);
+            $errorMsg = "";
 
-            $valid = $this->validateContestantId($contestantId) && $this->validateBets($bets);
+            $valid = $this->validateContestantId($contestantId, $errorMsg) && $this->validateBets($bets);
 
             if ($valid) {
                 foreach ($bets as $bet) {
@@ -33,6 +45,7 @@ class BetsController
                 }
             } else {
                 $output["success"] = false;
+                $output["error"] = $errorMsg;
             }
             DataAccessService::getConnection()->commit();
         } catch (Exception $e) {
@@ -44,13 +57,14 @@ class BetsController
         echo json_encode($output);
     }
 
-    private function validateContestantId($id)
+    private function validateContestantId($id, &$error)
     {
         $stmt = DataAccessService::getConnection()->prepare("SELECT count(*) FROM contestants WHERE id=:id");
         $stmt->bindParam(":id", $id);
         $stmt->execute();
         if ($stmt->fetchColumn() == 0) {
-            throw new Exception("A contestant with the provided id doesn't exist");
+            $error = "המתחרה נמחק ולכן אין אפשרות לשמור עבורו ניחושים";
+            return false;
         }
         return true;
     }

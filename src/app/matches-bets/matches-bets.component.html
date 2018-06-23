@@ -2,59 +2,76 @@
 	<i class="fa fa-spinner fa-spin"></i>
 </div>
 <div class="content" *ngIf="!loading">
-	<h2>
-		{{matchesBetsService.contestant.name}}
-		<span class="save-bets-btn-init">
-			<i *ngIf="!executingSave" class="fa fa-floppy-o btn save-bets-btn" (click)="saveBetsOnClick()"></i>
-			<i *ngIf="executingSave" class="fa fa-spinner fa-spin"></i>
-		</span>
-	</h2>
-	<div class="error-message">{{errorMessage}}</div>
-	<table class="matches-table">
-		<tr>
-			<th></th>
-			<th>
-				תאריך
-			</th>
-			<th></th>
-			<th>
-				קבוצת בית
-			</th>
-			<th>ניחוש</th>
-			<th>
-				קבוצת חוץ
-			</th>
-			<th></th>
-			<th>
-				תוצאה
-			</th>
-		</tr>
-		<tr *ngFor="let bet of matchesBetsService.groupStageBets; index as i">
-			<td>
-				{{i+1}}
-			</td>
-			<td class="datetime">
-				{{bet.match.datetime | date:'dd/MM/yy HH:mm':'':'he'}}
-			</td>
-			<td class="home-team-icon-init">
-				<img class="team-icon home-team-icon" [src]="'/assets/img/flags/'+bet.match.home_team.code+'.png'">
-			</td>
-			<td>
-				{{bet.match.home_team.hebrewName}}
-			</td>
-			<td>
-				<input type="number" class="bet-field home-team-bet" [(ngModel)]="bet.home_team_goals"> -
-				<input type="number" class="bet-field away-team-bet" [(ngModel)]="bet.away_team_goals">
-			</td>
-			<td>
-				{{bet.match.away_team.hebrewName}}
-			</td>
-			<td class="away-team-icon-init">
-				<img class="team-icon away-team-icon" [src]="'/assets/img/flags/'+bet.match.away_team.code+'.png'">
-			</td>
-			<td>
-				<span *ngIf="bet.match.status==='completed'">{{bet.match.home_team.goals}} - {{bet.match.away_team.goals}}</span>
-			</td>
-		</tr>
-	</table>
+	<form #groupStageBetsForm="ngForm" (ngSubmit)="onSubmit(groupStageBetsForm)">
+		<h2>
+			{{matchesBetsService.contestant.name}}
+			<span class="save-bets-btn-init">
+				<button type="submit" class="btn save-bets-btn">
+					<i *ngIf="!executingSave" class="fa fa-floppy-o"></i>
+				</button>
+				<i *ngIf="executingSave" class="fa fa-spinner fa-spin"></i>
+			</span>
+		</h2>
+		<div class="error-message top-error-message">{{errorMessage}}</div>
+		<table class="matches-table">
+			<tr>
+				<th></th>
+				<th>
+					תאריך
+				</th>
+				<th></th>
+				<th>
+					קבוצת בית
+				</th>
+				<th>ניחוש</th>
+				<th>
+					קבוצת חוץ
+				</th>
+				<th></th>
+				<th>
+					תוצאה
+				</th>
+				<th></th>
+			</tr>
+			<tr *ngFor="let bet of matchesBetsService.groupStageBets; index as i">
+				<td>
+					{{i+1}}
+				</td>
+				<td class="datetime">
+					{{bet.match.datetime | date:'dd/MM/yy HH:mm':'':'he'}}
+				</td>
+				<td class="home-team-icon-init">
+					<img class="team-icon home-team-icon" [src]="'/assets/img/flags/'+bet.match.home_team.code+'.png'">
+				</td>
+				<td>
+					{{bet.match.home_team.hebrewName}}
+				</td>
+				<td>
+					<div class="bet-field-group" [ngModelGroup]="'match-bet'+i" [appBetGoalsValidator]="bet.home_team_goals" [awayTeamGoals]="bet.away_team_goals"
+					 #betFieldGroup="ngModelGroup">
+						<input type="number" [name]="'home-team-bet'+i" class="bet-field home-team-bet" min="0" max="100" [(ngModel)]="bet.home_team_goals"
+						 [disabled]="executingSave"> -
+						<input type="number" [name]="'away-team-bet'+i" class="bet-field away-team-bet" min="0" max="100" [(ngModel)]="bet.away_team_goals"
+						 [disabled]="executingSave">
+					</div>
+				</td>
+				<td>
+					{{bet.match.away_team.hebrewName}}
+				</td>
+				<td class="away-team-icon-init">
+					<img class="team-icon away-team-icon" [src]="'/assets/img/flags/'+bet.match.away_team.code+'.png'">
+				</td>
+				<td>
+					<span *ngIf="bet.match.status==='completed'">{{bet.match.home_team.goals}} - {{bet.match.away_team.goals}}</span>
+				</td>
+				<td>
+					<div *ngIf="betFieldGroup.invalid&&bet.submitted" class="error-message">
+						<div *ngIf="betFieldGroup.errors.betGoals">
+							יש למלא גולים של שתי הנבחרות
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</form>
 </div>

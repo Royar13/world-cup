@@ -41,22 +41,28 @@ export class MatchesBetsService {
 		let promise = new Promise<GroupStageBet[]>((resolve, reject) => {
 			let matchesObservable = this.worldCupApiService.getGroupStageMatches();
 			let countriesObservable = this.countriesApiService.getCountries();
-			forkJoin(matchesObservable, countriesObservable).subscribe(results => {
+			let betsObservable = this.betsApiService.getGroupStageBets(this.contestantId);
+			forkJoin(matchesObservable, countriesObservable, betsObservable).subscribe(results => {
 				let matches: Match[] = results[0];
 				let countries: Country[] = results[1];
+				let bets: GroupStageBet[] = results[2];
 
 				this.groupStageBets = matches.map((match): GroupStageBet => {
+					let bet: GroupStageBet = bets.find(b => b.fifa_match_id === match.fifa_id);
+					if (bet === undefined) {
+						bet = new GroupStageBet();
+						bet.fifa_match_id = match.fifa_id;
+					}
+					bet.match = match;
+
 					let homeTeamCountry: Country = countries.find(c => c.fifa_code === match.home_team.code);
-					if (typeof homeTeamCountry !== "undefined") {
+					if (homeTeamCountry !== undefined) {
 						match.home_team.hebrewName = homeTeamCountry.hebrew_name;
 					}
 					let awayTeamCountry: Country = countries.find(c => c.fifa_code === match.away_team.code);
-					if (typeof awayTeamCountry !== "undefined") {
+					if (awayTeamCountry !== undefined) {
 						match.away_team.hebrewName = awayTeamCountry.hebrew_name;
 					}
-					let bet = new GroupStageBet();
-					bet.fifa_match_id = match.fifa_id;
-					bet.match = match;
 					return bet;
 				});
 				resolve(this.groupStageBets);
@@ -67,7 +73,7 @@ export class MatchesBetsService {
 
 	public saveGroupStageBets(): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			let filledBets = this.groupStageBets.filter(b => b.home_team_goals != null);
+			let filledBets: GroupStageBet[] = this.getFilledBets();
 			this.betsApiService.saveGroupStageBets(this.contestantId, filledBets).subscribe((response) => {
 				if (response.success) {
 					resolve();
@@ -79,5 +85,9 @@ export class MatchesBetsService {
 				reject("ארעה שגיאה בשמירת הניחושים");
 			});
 		});
+	}
+
+	public getFilledBets(): GroupStageBet[] {
+		return this.groupStageBets.filter(b => b.home_team_goals != null || b.away_team_goals != null);
 	}
 }

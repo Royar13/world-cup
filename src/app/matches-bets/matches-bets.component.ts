@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatchesBetsService } from './matches-bets.service';
 import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { FormControl } from '@angular/forms';
 
 @Component({
 	selector: 'app-matches-bets',
@@ -29,15 +30,23 @@ export class MatchesBetsComponent implements OnInit, OnDestroy {
 		this.subs.forEach(s => s.unsubscribe());
 	}
 
-	public saveBetsOnClick(): void {
-		this.errorMsg = "";
-		this.executingSave = true;
-		this.matchesBetsService.saveGroupStageBets().then(() => {
-			this.executingSave = false;
-		}, (err) => {
-			this.errorMsg = "* " + err;
-			this.executingSave = false;
-		});
-
+	public onSubmit(groupStageBetsForm: FormControl): void {
+		if (groupStageBetsForm.valid) {
+			this.errorMsg = "";
+			this.executingSave = true;
+			this.matchesBetsService.saveGroupStageBets().then(() => {
+				this.executingSave = false;
+			}, (err) => {
+				this.errorMsg = "* " + err;
+				this.executingSave = false;
+			});
+		}
+		else {
+			let filledBets = this.matchesBetsService.getFilledBets();
+			filledBets.forEach(bet => {
+				bet.submitted = true;
+			});
+			document.getElementsByClassName("bet-field-group ng-invalid").item(0).parentElement.scrollIntoView();
+		}
 	}
 }

@@ -31,9 +31,15 @@
 		</td>
 		<td></td>
 		<td>
-			<i *ngIf="!addMode" class="fa fa-plus btn add-contestant-btn" (click)="addContestantOnClick()"></i>
-			<i *ngIf="addMode&&!executingSave" class="fa fa-floppy-o btn save-contestant-btn" (click)="saveContestantOnClick()"></i>
-			<i *ngIf="addMode&&!executingSave" class="fa fa-times btn cancel-add-btn" (click)="cancelAddOnClick()"></i>
+			<button *ngIf="!addMode" class="btn add-contestant-btn" (click)="addContestantOnClick()">
+				<i class="fa fa-plus"></i>
+			</button>
+			<button *ngIf="addMode&&!executingSave" class="btn save-contestant-btn" (click)="saveContestantOnClick()">
+				<i class="fa fa-floppy-o"></i>
+			</button>
+			<button *ngIf="addMode&&!executingSave" class="btn cancel-add-btn" (click)="cancelAddOnClick()">
+				<i class="fa fa-times"></i>
+			</button>
 			<i *ngIf="addMode&&executingSave" class="fa fa-spinner fa-spin"></i>
 		</td>
 	</tr>
