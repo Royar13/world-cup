@@ -1,0 +1,25 @@
+.tab-headers-init {
+	overflow: auto;
+
+	.tab-header {
+		float: right;
+		width: 120px;
+		text-align: center;
+		border-top-right-radius: 20px;
+		border-top-left-radius: 20px;
+		background: linear-gradient(#f5f5f5, #cccccc);
+		line-height: 40px;
+		margin-left: 5px;
+		cursor: pointer;
+	}
+
+	.tab-header:not(.selected):hover {
+		background: linear-gradient(#f0f0f0, #c5c5c5);
+	}
+
+	.tab-header.selected {
+		color: #fff;
+		background: linear-gradient(#777, #444);
+		cursor: default;
+	}
+}

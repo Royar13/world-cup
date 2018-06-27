@@ -1,6 +1,6 @@
 import { Match } from "../WorldCupApi/Match";
 
-export class GroupStageBet {
+export class Bet {
 	id: number;
 	contestant_id: number;
 	fifa_match_id: number;
@@ -8,8 +8,8 @@ export class GroupStageBet {
 	away_team_goals: number;
 	match: Match;
 
-	public static fromJSON(obj: any): GroupStageBet {
-		let bet = new GroupStageBet();
+	public static fromJSON(obj: any): Bet {
+		let bet = new Bet();
 		Object.assign(bet, obj);
 		bet.contestant_id = parseInt(<any>bet.contestant_id);
 		bet.fifa_match_id = parseInt(<any>bet.fifa_match_id);

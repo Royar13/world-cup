@@ -1,0 +1,6 @@
+<div class="tab-headers-init">
+	<div class="tab-header" [ngClass]="{'selected': i===selectedIndex}" *ngFor="let label of labels; let i = index" (click)="selectTab(i)">{{label}}</div>
+</div>
+<ng-content>
+
+</ng-content>

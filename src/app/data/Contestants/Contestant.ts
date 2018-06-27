@@ -1,4 +1,4 @@
-import { GroupStageBet } from "../Bets/GroupStageBet";
+import { Bet } from "../Bets/Bet";
 
 export class Contestant {
 	public id: number;
@@ -7,7 +7,7 @@ export class Contestant {
 	public previousScore: number = 0;
 	public rank: number = 0;
 	public previousRank: number = 0;
-	public groupStageBets: GroupStageBet[] = new Array();
+	public groupStageBets: Bet[] = new Array();
 
 	constructor(id: number, name: string) {
 		this.id = id;

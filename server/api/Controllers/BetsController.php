@@ -8,24 +8,24 @@ use PDO;
 
 class BetsController
 {
-    public function getGroupStageBets()
+    public function getBets()
     {
-        $result = DataAccessService::getConnection()->query("SELECT * FROM group_stage_bets");
+        $result = DataAccessService::getConnection()->query("SELECT * FROM bets");
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($rows);
     }
 
-    public function getGroupStageBetsByContestant()
+    public function getBetsByContestant()
     {
         $contestantId = $_POST["contestantId"];
-        $stmt = DataAccessService::getConnection()->prepare("SELECT * FROM group_stage_bets WHERE contestant_id=:contestant_id");
+        $stmt = DataAccessService::getConnection()->prepare("SELECT * FROM bets WHERE contestant_id=:contestant_id");
         $stmt->bindParam(":contestant_id", $contestantId);
         $stmt->execute();
         $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($row);
     }
 
-    public function saveGroupStageBets()
+    public function saveBets()
     {
         $output = array("success" => true);
 
@@ -40,7 +40,7 @@ class BetsController
             if ($valid) {
                 foreach ($bets as $bet) {
                     $stmt = DataAccessService::getConnection()->prepare(
-                        "INSERT INTO group_stage_bets(contestant_id, fifa_match_id, home_team_goals, away_team_goals)
+                        "INSERT INTO bets(contestant_id, fifa_match_id, home_team_goals, away_team_goals)
 						VALUES(:contestant_id, :fifa_match_id, :home_team_goals, :away_team_goals)
 						ON DUPLICATE KEY UPDATE home_team_goals=VALUES(home_team_goals), away_team_goals=VALUES(away_team_goals)"
                     );

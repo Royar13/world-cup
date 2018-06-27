@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Match } from '../data/WorldCupApi/Match';
-import { GroupStageBet } from '../data/Bets/GroupStageBet';
+import { Bet } from '../data/Bets/Bet';
 import { WorldCupApiService } from '../data/WorldCupApi/world-cup-api.service';
 import { CountriesApiService } from '../data/Countries/countries-api.service';
 import { forkJoin } from 'rxjs';
@@ -15,7 +15,7 @@ import { BetsApiService } from '../data/Bets/bets-api.service';
 export class MatchesBetsService {
 	private contestantId: number;
 	public contestant: Contestant;
-	public groupStageBets: GroupStageBet[];
+	public bets: Bet[];
 
 	constructor(private worldCupApiService: WorldCupApiService, private countriesApiService: CountriesApiService, private contestantsApiService: ContestantsApiService,
 		private betsApiService: BetsApiService) {
@@ -24,7 +24,7 @@ export class MatchesBetsService {
 
 	public init(contestantId: number): Promise<any> {
 		this.contestantId = contestantId;
-		return Promise.all([this.getContestant(), this.getGroupStageBets()]);
+		return Promise.all([this.getContestant(), this.getBets()]);
 	}
 
 	private getContestant(): Promise<Contestant> {
@@ -37,20 +37,20 @@ export class MatchesBetsService {
 		return promise;
 	}
 
-	private getGroupStageBets(): Promise<GroupStageBet[]> {
-		let promise = new Promise<GroupStageBet[]>((resolve, reject) => {
+	private getBets(): Promise<Bet[]> {
+		let promise = new Promise<Bet[]>((resolve, reject) => {
 			let matchesObservable = this.worldCupApiService.getGroupStageMatches();
 			let countriesObservable = this.countriesApiService.getCountries();
-			let betsObservable = this.betsApiService.getGroupStageBetsByContestant(this.contestantId);
+			let betsObservable = this.betsApiService.getBetsContestant(this.contestantId);
 			forkJoin(matchesObservable, countriesObservable, betsObservable).subscribe(results => {
 				let matches: Match[] = results[0];
 				let countries: Country[] = results[1];
-				let bets: GroupStageBet[] = results[2];
+				let bets: Bet[] = results[2];
 
-				this.groupStageBets = matches.map((match): GroupStageBet => {
-					let bet: GroupStageBet = bets.find(b => b.fifa_match_id === match.fifa_id);
+				this.bets = matches.map((match): Bet => {
+					let bet: Bet = bets.find(b => b.fifa_match_id === match.fifa_id);
 					if (bet === undefined) {
-						bet = new GroupStageBet();
+						bet = new Bet();
 						bet.fifa_match_id = match.fifa_id;
 					}
 					bet.match = match;
@@ -65,16 +65,16 @@ export class MatchesBetsService {
 					}
 					return bet;
 				});
-				resolve(this.groupStageBets);
+				resolve(this.bets);
 			}, reject);
 		});
 		return promise;
 	}
 
-	public saveGroupStageBets(): Promise<void> {
+	public saveBets(): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			let filledBets: GroupStageBet[] = this.groupStageBets.filter(b => b.isFilled());
-			this.betsApiService.saveGroupStageBets(this.contestantId, filledBets).subscribe((response) => {
+			let filledBets: Bet[] = this.bets.filter(b => b.isFilled());
+			this.betsApiService.saveBets(this.contestantId, filledBets).subscribe((response) => {
 				if (response.success) {
 					resolve();
 				}

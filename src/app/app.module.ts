@@ -14,6 +14,8 @@ import { CountriesApiService } from './data/Countries/countries-api.service';
 import { WorldCupApiService } from './data/WorldCupApi/world-cup-api.service';
 import localeHe from '@angular/common/locales/he';
 import { registerLocaleData } from '@angular/common';
+import { TabGroupComponent } from './common/tab-group/tab-group.component';
+import { TabComponent } from './common/tab-group/tab/tab.component';
 
 registerLocaleData(localeHe);
 
@@ -22,7 +24,9 @@ registerLocaleData(localeHe);
 		AppComponent,
 		MainComponent,
 		ContestantStandingsComponent,
-		MatchesBetsComponent
+		MatchesBetsComponent,
+		TabGroupComponent,
+		TabComponent
 	],
 	imports: [
 		BrowserModule,

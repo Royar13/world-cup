@@ -36,7 +36,7 @@ export class MatchesBetsComponent implements OnInit, OnDestroy {
 		if (groupStageBetsForm.valid) {
 			this.errorMsg = "";
 			this.executingSave = true;
-			this.matchesBetsService.saveGroupStageBets().then(() => {
+			this.matchesBetsService.saveBets().then(() => {
 				this.executingSave = false;
 				this.submittedBets = false;
 			}, (err) => {

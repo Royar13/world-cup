@@ -2,7 +2,7 @@
 	<i class="fa fa-spinner fa-spin"></i>
 </div>
 <div class="content" *ngIf="!loading">
-	<form #groupStageBetsForm="ngForm" (ngSubmit)="onSubmit(groupStageBetsForm)">
+	<form #gbetsForm="ngForm" (ngSubmit)="onSubmit(betsForm)">
 		<h2>
 			הניחושים של {{matchesBetsService.contestant.name}}
 			<div class="save-bets-btn-init top-save-bets-btn-init">
@@ -13,6 +13,17 @@
 				<i [style.visibility]="executingSave ? 'visible' : 'hidden'" class="fa fa-spinner fa-spin"></i>
 			</div>
 		</h2>
+		<app-tab-group>
+			<app-tab label="ראשון">
+				להלהלהל
+			</app-tab>
+			<app-tab label="שני">
+				בבבבבב
+			</app-tab>
+			<app-tab label="שלישי">
+				מממ
+			</app-tab>
+		</app-tab-group>
 		<div class="error-message top-error-message">{{errorMsg}}</div>
 		<table class="matches-table">
 			<tr>
@@ -34,7 +45,7 @@
 				</th>
 				<th></th>
 			</tr>
-			<tr *ngFor="let bet of matchesBetsService.groupStageBets; index as i">
+			<tr *ngFor="let bet of matchesBetsService.bets; index as i">
 				<td>
 					{{i+1}}
 				</td>

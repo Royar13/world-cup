@@ -3,7 +3,7 @@ import { ContestantsApiService } from '../data/Contestants/contestants-api.servi
 import { Contestant } from '../data/Contestants/Contestant';
 import { BetsApiService } from '../data/Bets/bets-api.service';
 import { forkJoin } from 'rxjs';
-import { GroupStageBet } from '../data/Bets/GroupStageBet';
+import { Bet } from '../data/Bets/Bet';
 import { WorldCupApiService } from '../data/WorldCupApi/world-cup-api.service';
 import { Match } from '../data/WorldCupApi/Match';
 
@@ -26,12 +26,12 @@ export class ContestantStandingsService {
 	private getContestants(): Promise<Contestant[]> {
 		let promise = new Promise<Contestant[]>((resolve, reject) => {
 			let contestantsObservable = this.contestansApiService.getContestants();
-			let betsObservable = this.betsApiService.getGroupStageBets();
+			let betsObservable = this.betsApiService.getBets();
 			let matchesObservable = this.worldCupApiService.getGroupStageMatches();
 
 			forkJoin(contestantsObservable, betsObservable, matchesObservable).subscribe(results => {
 				let contestants: Contestant[] = results[0];
-				let bets: GroupStageBet[] = results[1];
+				let bets: Bet[] = results[1];
 				this.matches = results[2];
 				bets.forEach(bet => {
 					bet.match = this.matches.find(m => m.fifa_id === bet.fifa_match_id);
@@ -82,7 +82,7 @@ export class ContestantStandingsService {
 		});
 	}
 
-	private calculatesBetsScore(groupStageBets: GroupStageBet[]): number {
+	private calculatesBetsScore(groupStageBets: Bet[]): number {
 		let score: number = 0;
 		groupStageBets.forEach(bet => {
 			if (bet.match.status === "completed") {
@@ -92,7 +92,13 @@ export class ContestantStandingsService {
 				}
 				else if (bet.home_team_goals - bet.away_team_goals === bet.match.home_team.goals - bet.match.away_team.goals) {
 					//goal difference is correct
-					score += 2;
+					if (bet.home_team_goals - bet.away_team_goals === 0) {
+						//a draw is only worth 1 point
+						score += 1;
+					}
+					else {
+						score += 2;
+					}
 				}
 				else if (Math.sign(bet.home_team_goals - bet.away_team_goals) === Math.sign(bet.match.home_team.goals - bet.match.away_team.goals)) {
 					//winner/draw was guessed
@@ -116,7 +122,7 @@ export class ContestantStandingsService {
 		}
 		lastMatchIndex = (lastMatchIndex >= numOfGamesAgo) ? lastMatchIndex - numOfGamesAgo : 0;
 		let lastMatch: Match = this.matches[lastMatchIndex];
-		let slicedBets: GroupStageBet[] = contestant.groupStageBets.filter(bet => bet.match.datetime < lastMatch.datetime);
+		let slicedBets: Bet[] = contestant.groupStageBets.filter(bet => bet.match.datetime < lastMatch.datetime);
 		return this.calculatesBetsScore(slicedBets);
 	}
 
