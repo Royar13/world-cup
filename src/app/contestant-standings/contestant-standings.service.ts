@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { Bet } from '../data/Bets/Bet';
 import { WorldCupApiService } from '../data/WorldCupApi/world-cup-api.service';
 import { Match } from '../data/WorldCupApi/Match';
+import { ScoreService } from './score.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,7 +16,8 @@ export class ContestantStandingsService {
 	private matches: Match[];
 	public contestantsStandings: Contestant[] = new Array();
 
-	constructor(private contestansApiService: ContestantsApiService, private betsApiService: BetsApiService, private worldCupApiService: WorldCupApiService) {
+	constructor(private contestansApiService: ContestantsApiService, private betsApiService: BetsApiService, private worldCupApiService: WorldCupApiService,
+		private scoreService: ScoreService) {
 
 	}
 
@@ -40,8 +42,8 @@ export class ContestantStandingsService {
 				this.contestants = contestants
 					.map((contestant): Contestant => {
 						contestant.bets = bets.filter(b => b.contestant_id === contestant.id);
-						contestant.score = this.calculateScore(contestant);
-						contestant.previousScore = this.calculatePreviousScore(contestant);
+						contestant.score = this.scoreService.calculatesBetsScore(contestant.bets);
+						contestant.previousScore = this.scoreService.calculatePreviousScore(contestant.bets, this.matches);
 						return contestant;
 					});
 
@@ -80,50 +82,6 @@ export class ContestantStandingsService {
 				reject();
 			});
 		});
-	}
-
-	private calculatesBetsScore(groupStageBets: Bet[]): number {
-		let score: number = 0;
-		groupStageBets.forEach(bet => {
-			if (bet.match.status === "completed") {
-				if (bet.home_team_goals === bet.match.home_team.goals && bet.away_team_goals === bet.match.away_team.goals) {
-					//correct guess
-					score += 3;
-				}
-				else if (bet.home_team_goals - bet.away_team_goals === bet.match.home_team.goals - bet.match.away_team.goals) {
-					//goal difference is correct
-					if (bet.home_team_goals - bet.away_team_goals === 0) {
-						//a draw is only worth 1 point
-						score += 1;
-					}
-					else {
-						score += 2;
-					}
-				}
-				else if (Math.sign(bet.home_team_goals - bet.away_team_goals) === Math.sign(bet.match.home_team.goals - bet.match.away_team.goals)) {
-					//winner/draw was guessed
-					score += 1;
-				}
-			}
-		});
-		return score;
-	}
-
-	private calculateScore(contestant: Contestant): number {
-		return this.calculatesBetsScore(contestant.bets);
-	}
-
-	private calculatePreviousScore(contestant: Contestant): number {
-		let numOfGamesAgo: number = 5;
-		//get all the games before this match index
-		let lastMatchIndex: number = this.matches.findIndex(m => m.status !== "completed");
-		if (lastMatchIndex === undefined) {
-			lastMatchIndex = this.matches.length;
-		}
-		lastMatchIndex = (lastMatchIndex >= numOfGamesAgo) ? lastMatchIndex - numOfGamesAgo : 0;
-		let lastMatch: Match = this.matches[lastMatchIndex];
-		let slicedBets: Bet[] = contestant.bets.filter(bet => bet.match.datetime < lastMatch.datetime);
-		return this.calculatesBetsScore(slicedBets);
 	}
 
 	private compareContestants(a: Contestant, b: Contestant): number {

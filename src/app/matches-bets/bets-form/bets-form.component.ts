@@ -42,4 +42,11 @@ export class BetsFormComponent implements OnInit {
 		}
 	}
 
+	public showChooseBetWinner(bet: Bet): boolean {
+		return this.stages.indexOf('First stage') < 0 && bet.isFilled() && bet.home_team_goals === bet.away_team_goals;
+	}
+
+	public isChooseBetWinnerValid(bet: Bet): boolean {
+		return !this.showChooseBetWinner(bet) || bet.winner_country_code !== null;
+	}
 }

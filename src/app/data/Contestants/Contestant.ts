@@ -17,7 +17,6 @@ export class Contestant {
 	public static fromJSON(obj: any): Contestant {
 		let contestant = new Contestant(obj.id, obj.name);
 		Object.assign(contestant, obj);
-		contestant.id = parseInt(<any>contestant.id);
 		return contestant;
 	}
 }

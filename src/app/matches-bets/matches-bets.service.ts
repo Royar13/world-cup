@@ -84,6 +84,11 @@ export class MatchesBetsService {
 	public saveBets(saveBets: Bet[]): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
 			let filledBets: Bet[] = saveBets.filter(b => b.isFilled());
+			saveBets.forEach(bet => {
+				if (bet.winner_country_code !== null && bet.home_team_goals !== bet.away_team_goals) {
+					bet.winner_country_code = null;
+				}
+			});
 			this.betsApiService.saveBets(this.contestantId, filledBets).subscribe((response) => {
 				if (response.success) {
 					this.updateOriginalBets();

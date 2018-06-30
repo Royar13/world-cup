@@ -32,11 +32,19 @@
 			<td>
 				{{bet.match.home_team.hebrewName}}
 			</td>
-			<td>
+			<td class="bet-init">
+				<span class="choose-bet-winner" *ngIf="stages.indexOf('First stage')<0">
+					<input type="radio" class="bet-field" *ngIf="showChooseBetWinner(bet)" [name]="'winner-code'+i" [value]="bet.match.home_team.code"
+					 [(ngModel)]="bet.winner_country_code" required>
+				</span>
 				<input type="number" [name]="'home-team-bet'+i" class="bet-field home-team-bet" min="0" max="100" [(ngModel)]="bet.home_team_goals"
 				 [disabled]="executingSave" required #homeTeamBet="ngModel"> -
 				<input type="number" [name]="'away-team-bet'+i" class="bet-field away-team-bet" min="0" max="100" [(ngModel)]="bet.away_team_goals"
 				 [disabled]="executingSave" required #awayTeamBet="ngModel">
+				<span class="choose-bet-winner" *ngIf="stages.indexOf('First stage')<0">
+					<input type="radio" class="bet-field" *ngIf="showChooseBetWinner(bet)" [name]="'winner-code'+i" [value]="bet.match.away_team.code"
+					 [(ngModel)]="bet.winner_country_code" required>
+				</span>
 			</td>
 			<td>
 				{{bet.match.away_team.hebrewName}}
@@ -50,6 +58,9 @@
 			<td class="field-error">
 				<div *ngIf="(homeTeamBet.invalid||awayTeamBet.invalid)&&submittedBets" class="error-message">
 					יש למלא שדות
+				</div>
+				<div *ngIf="!isChooseBetWinnerValid(bet)&&submittedBets" class="error-message">
+					יש לבחור מנצח בפנדלים
 				</div>
 			</td>
 		</tr>

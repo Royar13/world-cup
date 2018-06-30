@@ -10,7 +10,7 @@
 	td {
 		border-top: 1px solid #aaa;
 
-		.bet-field {
+		input[type=number].bet-field {
 			width: 40px;
 		}
 	}
@@ -36,6 +36,16 @@
 		width: 25px;
 		height: 25px;
 		vertical-align: middle;
+	}
+
+	.bet-init {
+		white-space: nowrap;
+
+		.choose-bet-winner {
+			display: inline-block;
+			width: 20px;
+			text-align: center;
+		}
 	}
 }
 

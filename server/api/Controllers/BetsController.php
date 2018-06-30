@@ -39,15 +39,18 @@ class BetsController
 
             if ($valid) {
                 foreach ($bets as $bet) {
-                    $stmt = DataAccessService::getConnection()->prepare(
-                        "INSERT INTO bets(contestant_id, fifa_match_id, home_team_goals, away_team_goals)
-						VALUES(:contestant_id, :fifa_match_id, :home_team_goals, :away_team_goals)
-						ON DUPLICATE KEY UPDATE home_team_goals=VALUES(home_team_goals), away_team_goals=VALUES(away_team_goals)"
-                    );
+                    $stmt = DataAccessService::getConnection()->prepare("INSERT INTO bets(contestant_id, fifa_match_id, home_team_goals, away_team_goals, winner_country_code)
+					VALUES(:contestant_id, :fifa_match_id, :home_team_goals, :away_team_goals, :winner_country_code)
+					ON DUPLICATE KEY UPDATE home_team_goals=VALUES(home_team_goals), away_team_goals=VALUES(away_team_goals), winner_country_code=VALUES(winner_country_code)");
                     $stmt->bindParam(":contestant_id", $contestantId);
                     $stmt->bindParam(":fifa_match_id", $bet->fifa_match_id);
                     $stmt->bindParam(":home_team_goals", $bet->home_team_goals);
                     $stmt->bindParam(":away_team_goals", $bet->away_team_goals);
+                    $winnerCode = null;
+                    if (isset($bet->winner_country_code)) {
+                        $winnerCode = $bet->winner_country_code;
+                    }
+                    $stmt->bindParam(":winner_country_code", $winnerCode);
                     $stmt->execute();
                 }
             } else {
@@ -100,6 +103,17 @@ class BetsController
         if (!isset($bet->away_team_goals) || !is_numeric($bet->away_team_goals) || $bet->away_team_goals < 0) {
             throw new Exception("The away_team_goals is not a valid number");
         }
+        if (isset($bet->winner_country_code) && !$this->validateCountryExists($bet->winner_country_code)) {
+            throw new Exception("The winner's country code doesn't exist");
+        }
         return true;
+    }
+
+    private function validateCountryExists($countryCode)
+    {
+        $stmt = DataAccessService::getConnection()->prepare("SELECT count(*) FROM countries WHERE fifa_code=:fifa_code");
+        $stmt->bindParam(":fifa_code", $countryCode);
+        $stmt->execute();
+        return $stmt->fetchColumn() != 0;
     }
 }
