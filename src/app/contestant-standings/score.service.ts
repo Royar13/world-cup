@@ -9,16 +9,17 @@ import { Match } from '../data/WorldCupApi/Match';
 export class ScoreService {
 	private stageModifier: Map<string, number> = new Map([
 		["First stage", 1],
-		["Round of 16", 1.5],
-		["Quarter-finals", 2],
-		["Semi-finals", 2.5],
-		["Finals", 3],
-		["Play-off for third place", 2.5]
+		["Round of 16", 2],
+		["Quarter-finals", 3],
+		["Semi-finals", 4],
+		["Final", 5],
+		["Play-off for third place", 4]
 	]);
+	private cupWinnerBetScore: number = 10;
 
 	constructor() { }
 
-	public calculatePreviousScore(bets: Bet[], allMatches: Match[]): number {
+	public calculatePreviousScore(bets: Bet[], cupWinnerBet: string, allMatches: Match[]): number {
 		let numOfGamesAgo: number = 5;
 		//get all the games before this match index
 		let lastMatchIndex: number = allMatches.findIndex(m => m.status !== "completed");
@@ -28,10 +29,10 @@ export class ScoreService {
 		lastMatchIndex = (lastMatchIndex >= numOfGamesAgo) ? lastMatchIndex - numOfGamesAgo : 0;
 		let lastMatch: Match = allMatches[lastMatchIndex];
 		let slicedBets: Bet[] = bets.filter(bet => bet.match.datetime < lastMatch.datetime);
-		return this.calculateBetsScore(slicedBets);
+		return this.calculateBetsScore(slicedBets, cupWinnerBet, allMatches);
 	}
 
-	public calculateBetsScore(bets: Bet[]): number {
+	public calculateBetsScore(bets: Bet[], cupWinnerBet: string, allMatches: Match[]): number {
 		let score: number = 0;
 		bets.forEach(bet => {
 			if (bet.match.status === "completed") {
@@ -43,6 +44,12 @@ export class ScoreService {
 				}
 			}
 		});
+		if (cupWinnerBet !== null) {
+			let finalMatch: Match = allMatches.find(m => m.stage_name === "Final");
+			if (finalMatch !== undefined && finalMatch.winner_code === cupWinnerBet) {
+				score += this.cupWinnerBetScore;
+			}
+		}
 		return score;
 	}
 

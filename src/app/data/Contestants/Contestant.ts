@@ -3,6 +3,7 @@ import { Bet } from "../Bets/Bet";
 export class Contestant {
 	public id: number;
 	public name: string;
+	public winner_bet_country_code: string = null;
 	public score: number = 0;
 	public previousScore: number = 0;
 	public rank: number = 0;

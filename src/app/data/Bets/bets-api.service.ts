@@ -36,4 +36,11 @@ export class BetsApiService {
 		formData.append("bets", JSON.stringify(bets));
 		return this.http.post(this.appConfig.apiUrl + "/index.php?controller=Bets&action=saveBets", formData);
 	}
+
+	public saveCupWinnerBet(contestantId: number, countryCode: string): Observable<any> {
+		let formData = new FormData();
+		formData.append("contestantId", contestantId.toString());
+		formData.append("countryCode", countryCode);
+		return this.http.post(this.appConfig.apiUrl + "/index.php?controller=Bets&action=saveCupWinnerBet", formData);
+	}
 }

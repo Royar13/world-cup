@@ -24,8 +24,8 @@ export class BetsFormComponent implements OnInit {
 	ngOnInit() {
 	}
 
-	public onSubmit(groupStageBetsForm: FormControl): void {
-		if (groupStageBetsForm.valid) {
+	public onSubmit(betsForm: FormControl): void {
+		if (betsForm.valid) {
 			this.errorMsg = "";
 			this.executingSave = true;
 			this.matchesBetsService.saveBets(this.bets).then(() => {

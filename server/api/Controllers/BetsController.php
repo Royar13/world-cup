@@ -67,6 +67,32 @@ class BetsController
         echo json_encode($output);
     }
 
+    public function saveCupWinnerBet()
+    {
+        $output = array("success" => true);
+
+        DataAccessService::getConnection()->beginTransaction();
+        try {
+            $contestantId = $_POST["contestantId"];
+            $countryCode = $_POST["countryCode"];
+            $valid = $this->validateCountryExists($countryCode);
+            if ($valid) {
+                $stmt = DataAccessService::getConnection()->prepare("UPDATE contestants SET winner_bet_country_code=:winner_bet_country_code WHERE id=:id");
+                $stmt->bindParam(":id", $contestantId);
+                $stmt->bindParam(":winner_bet_country_code", $countryCode);
+                $stmt->execute();
+            } else {
+                throw new Exception("Invalid country code");
+            }
+            DataAccessService::getConnection()->commit();
+        } catch (Exception $e) {
+            DataAccessService::getConnection()->rollBack();
+            $output["success"] = false;
+            $output["error"] = "ארעה שגיאה בשמירת המידע";
+        }
+        echo json_encode($output);
+    }
+
     private function validateContestantId($id, &$error)
     {
         $stmt = DataAccessService::getConnection()->prepare("SELECT count(*) FROM contestants WHERE id=:id");
