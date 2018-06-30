@@ -2,7 +2,7 @@
 	<i class="fa fa-trophy"></i>
 	זוכה:
 	<select name="country" [(ngModel)]="matchesBetsService.contestant.winner_bet_country_code" required>
-		<option [value]="undefined" selected disabled>--בחר--</option>
+		<option [value]="null" selected disabled>--בחר--</option>
 		<option *ngFor="let country of matchesBetsService.countries" [value]="country.fifa_code">{{country.hebrew_name}}</option>
 	</select>
 	<span class="save-init">

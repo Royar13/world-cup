@@ -118,7 +118,7 @@ export class MatchesBetsService {
 
 	public saveCupWinnerBet(): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			if (this.contestant.winner_bet_country_code !== undefined) {
+			if (this.contestant.winner_bet_country_code !== null) {
 				this.betsApiService.saveCupWinnerBet(this.contestantId, this.contestant.winner_bet_country_code).subscribe((response) => {
 					if (response.success) {
 						this.originalCupWinnerBet = this.contestant.winner_bet_country_code;
