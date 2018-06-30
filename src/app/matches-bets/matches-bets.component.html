@@ -2,95 +2,24 @@
 	<i class="fa fa-spinner fa-spin"></i>
 </div>
 <div class="content" *ngIf="!loading">
-	<form #gbetsForm="ngForm" (ngSubmit)="onSubmit(betsForm)">
-		<h2>
-			הניחושים של {{matchesBetsService.contestant.name}}
-			<div class="save-bets-btn-init top-save-bets-btn-init">
-				<button type="submit" class="btn text-btn" [disabled]="executingSave">
-					<i class="fa fa-floppy-o"></i>
-					שמור
-				</button>
-				<i [style.visibility]="executingSave ? 'visible' : 'hidden'" class="fa fa-spinner fa-spin"></i>
-			</div>
-		</h2>
-		<app-tab-group>
-			<app-tab label="ראשון">
-				להלהלהל
-			</app-tab>
-			<app-tab label="שני">
-				בבבבבב
-			</app-tab>
-			<app-tab label="שלישי">
-				מממ
-			</app-tab>
-		</app-tab-group>
-		<div class="error-message top-error-message">{{errorMsg}}</div>
-		<table class="matches-table">
-			<tr>
-				<th></th>
-				<th>
-					תאריך
-				</th>
-				<th></th>
-				<th>
-					קבוצת בית
-				</th>
-				<th>ניחוש</th>
-				<th>
-					קבוצת חוץ
-				</th>
-				<th></th>
-				<th>
-					תוצאה
-				</th>
-				<th></th>
-			</tr>
-			<tr *ngFor="let bet of matchesBetsService.bets; index as i">
-				<td>
-					{{i+1}}
-				</td>
-				<td class="datetime">
-					{{bet.match.datetime | date:'dd/MM/yy HH:mm':'':'he'}}
-				</td>
-				<td class="home-team-icon-init">
-					<img class="team-icon home-team-icon" [src]="'/assets/img/flags/'+bet.match.home_team.code+'.png'">
-				</td>
-				<td>
-					{{bet.match.home_team.hebrewName}}
-				</td>
-				<td>
-					<input type="number" [name]="'home-team-bet'+i" class="bet-field home-team-bet" min="0" max="100" [(ngModel)]="bet.home_team_goals"
-					 [disabled]="executingSave" required #homeTeamBet="ngModel"> -
-					<input type="number" [name]="'away-team-bet'+i" class="bet-field away-team-bet" min="0" max="100" [(ngModel)]="bet.away_team_goals"
-					 [disabled]="executingSave" required #awayTeamBet="ngModel">
-				</td>
-				<td>
-					{{bet.match.away_team.hebrewName}}
-				</td>
-				<td class="away-team-icon-init">
-					<img class="team-icon away-team-icon" [src]="'/assets/img/flags/'+bet.match.away_team.code+'.png'">
-				</td>
-				<td>
-					<span *ngIf="bet.match.status==='completed'">{{bet.match.home_team.goals}} - {{bet.match.away_team.goals}}</span>
-				</td>
-				<td>
-					<div *ngIf="(homeTeamBet.invalid||awayTeamBet.invalid)&&submittedBets" class="error-message">
-						יש למלא שדות
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="9">
-					<div class="error-message">{{errorMsg}}</div>
-					<div class="save-bets-btn-init bottom-save-bets-btn-init">
-						<button type="submit" class="btn text-btn" [disabled]="executingSave">
-							<i class="fa fa-floppy-o"></i>
-							שמור
-						</button>
-						<i [style.visibility]="executingSave ? 'visible' : 'hidden'" class="fa fa-spinner fa-spin"></i>
-					</div>
-				</td>
-			</tr>
-		</table>
-	</form>
+	<h2>
+		הניחושים של {{matchesBetsService.contestant.name}}
+	</h2>
+	<app-tab-group>
+		<app-tab label="בתים">
+			<app-bets-form [stages]="['First stage']"></app-bets-form>
+		</app-tab>
+		<app-tab label="שמינית גמר">
+			<app-bets-form [stages]="['Round of 16']"></app-bets-form>
+		</app-tab>
+		<app-tab label="רבע גמר">
+			<app-bets-form [stages]="['Quarter-finals']"></app-bets-form>
+		</app-tab>
+		<app-tab label="חצי גמר">
+			<app-bets-form [stages]="['Semi-finals']"></app-bets-form>
+		</app-tab>
+		<app-tab label="גמר">
+			<app-bets-form [stages]="['Finals', 'Play-off for third place']"></app-bets-form>
+		</app-tab>
+	</app-tab-group>
 </div>

@@ -16,6 +16,7 @@ import localeHe from '@angular/common/locales/he';
 import { registerLocaleData } from '@angular/common';
 import { TabGroupComponent } from './common/tab-group/tab-group.component';
 import { TabComponent } from './common/tab-group/tab/tab.component';
+import { BetsFormComponent } from './matches-bets/bets-form/bets-form.component';
 
 registerLocaleData(localeHe);
 
@@ -26,7 +27,8 @@ registerLocaleData(localeHe);
 		ContestantStandingsComponent,
 		MatchesBetsComponent,
 		TabGroupComponent,
-		TabComponent
+		TabComponent,
+		BetsFormComponent
 	],
 	imports: [
 		BrowserModule,

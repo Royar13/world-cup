@@ -12,12 +12,14 @@ export class TabGroupComponent implements OnInit {
 	private tabsArr: TabComponent[];
 	public labels: string[] = new Array();
 
-	constructor() { }
+	constructor() {
+
+	}
 
 	ngOnInit() {
 	}
 
-	ngAfterViewInit() {
+	ngAfterContentInit() {
 		this.tabsArr = this.tabs.toArray();
 		this.tabsArr.forEach((tab, index) => {
 			this.labels[index] = tab.label;

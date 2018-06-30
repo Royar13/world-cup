@@ -15,7 +15,8 @@ import { BetsApiService } from '../data/Bets/bets-api.service';
 export class MatchesBetsService {
 	private contestantId: number;
 	public contestant: Contestant;
-	public bets: Bet[];
+	public originalBets: Bet[] = new Array();
+	public bets: Bet[] = new Array();
 
 	constructor(private worldCupApiService: WorldCupApiService, private countriesApiService: CountriesApiService, private contestantsApiService: ContestantsApiService,
 		private betsApiService: BetsApiService) {
@@ -65,17 +66,27 @@ export class MatchesBetsService {
 					}
 					return bet;
 				});
+				this.updateOriginalBets();
 				resolve(this.bets);
 			}, reject);
 		});
 		return promise;
 	}
 
-	public saveBets(): Promise<void> {
+	private updateOriginalBets(): void {
+		this.originalBets = this.bets.map(b => {
+			let bet = new Bet();
+			Object.assign(bet, b);
+			return bet;
+		});
+	}
+
+	public saveBets(saveBets: Bet[]): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			let filledBets: Bet[] = this.bets.filter(b => b.isFilled());
+			let filledBets: Bet[] = saveBets.filter(b => b.isFilled());
 			this.betsApiService.saveBets(this.contestantId, filledBets).subscribe((response) => {
 				if (response.success) {
+					this.updateOriginalBets();
 					resolve();
 				}
 				else {
@@ -85,5 +96,19 @@ export class MatchesBetsService {
 				reject("ארעה שגיאה בשמירת הניחושים");
 			});
 		});
+	}
+
+	public hasChanged(): boolean {
+		let changed: boolean = false;
+		for (let i = 0; i < this.bets.length && !changed; i++) {
+			let bet = this.bets[i];
+			let originalBet = this.originalBets[i];
+			if (bet.home_team_goals !== originalBet.home_team_goals ||
+				bet.away_team_goals !== originalBet.away_team_goals ||
+				bet.winner_country_code !== originalBet.winner_country_code) {
+				changed = true;
+			}
+		}
+		return changed;
 	}
 }
