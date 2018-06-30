@@ -28,10 +28,10 @@ export class ScoreService {
 		lastMatchIndex = (lastMatchIndex >= numOfGamesAgo) ? lastMatchIndex - numOfGamesAgo : 0;
 		let lastMatch: Match = allMatches[lastMatchIndex];
 		let slicedBets: Bet[] = bets.filter(bet => bet.match.datetime < lastMatch.datetime);
-		return this.calculatesBetsScore(slicedBets);
+		return this.calculateBetsScore(slicedBets);
 	}
 
-	public calculatesBetsScore(bets: Bet[]): number {
+	public calculateBetsScore(bets: Bet[]): number {
 		let score: number = 0;
 		bets.forEach(bet => {
 			if (bet.match.status === "completed") {

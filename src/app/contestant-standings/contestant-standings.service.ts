@@ -42,7 +42,7 @@ export class ContestantStandingsService {
 				this.contestants = contestants
 					.map((contestant): Contestant => {
 						contestant.bets = bets.filter(b => b.contestant_id === contestant.id);
-						contestant.score = this.scoreService.calculatesBetsScore(contestant.bets);
+						contestant.score = this.scoreService.calculateBetsScore(contestant.bets);
 						contestant.previousScore = this.scoreService.calculatePreviousScore(contestant.bets, this.matches);
 						return contestant;
 					});

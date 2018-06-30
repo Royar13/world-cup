@@ -8,6 +8,7 @@ import { Country } from '../data/Countries/Country';
 import { Contestant } from '../data/Contestants/Contestant';
 import { ContestantsApiService } from '../data/Contestants/contestants-api.service';
 import { BetsApiService } from '../data/Bets/bets-api.service';
+import { ScoreService } from '../contestant-standings/score.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,15 +18,18 @@ export class MatchesBetsService {
 	public contestant: Contestant;
 	public originalBets: Bet[] = new Array();
 	public bets: Bet[] = new Array();
+	public contestantScore: number;
 
 	constructor(private worldCupApiService: WorldCupApiService, private countriesApiService: CountriesApiService, private contestantsApiService: ContestantsApiService,
-		private betsApiService: BetsApiService) {
+		private betsApiService: BetsApiService, private scoreService: ScoreService) {
 
 	}
 
 	public init(contestantId: number): Promise<any> {
 		this.contestantId = contestantId;
-		return Promise.all([this.getContestant(), this.getBets()]);
+		return Promise.all([this.getContestant(), this.getBets()]).then(() => {
+			this.updateScore();
+		});
 	}
 
 	private getContestant(): Promise<Contestant> {
@@ -73,6 +77,10 @@ export class MatchesBetsService {
 		return promise;
 	}
 
+	private updateScore(): void {
+		this.contestantScore = this.scoreService.calculateBetsScore(this.bets);
+	}
+
 	private updateOriginalBets(): void {
 		this.originalBets = this.bets.map(b => {
 			let bet = new Bet();
@@ -92,6 +100,7 @@ export class MatchesBetsService {
 			this.betsApiService.saveBets(this.contestantId, filledBets).subscribe((response) => {
 				if (response.success) {
 					this.updateOriginalBets();
+					this.updateScore();
 					resolve();
 				}
 				else {

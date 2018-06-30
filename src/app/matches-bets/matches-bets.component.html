@@ -4,6 +4,7 @@
 <div class="content" *ngIf="!loading">
 	<h2>
 		הניחושים של {{matchesBetsService.contestant.name}}
+		<span class="score">{{matchesBetsService.contestantScore}} נקודות</span>
 	</h2>
 	<app-tab-group>
 		<app-tab label="בתים">
