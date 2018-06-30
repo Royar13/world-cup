@@ -1,4 +1,4 @@
-<form #betsForm="ngForm" (ngSubmit)="onSubmit(betsForm)">
+<form #betsForm="ngForm" (ngSubmit)="onSubmit(betsForm)" *ngIf="bets.length>0; else noMatchesMsg">
 	<table class="matches-table">
 		<tr>
 			<th></th>
@@ -67,3 +67,6 @@
 		</tr>
 	</table>
 </form>
+<ng-template #noMatchesMsg>
+	טרם נקבעו הקבוצות
+</ng-template>

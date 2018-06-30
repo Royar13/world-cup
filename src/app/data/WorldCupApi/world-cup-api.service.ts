@@ -27,7 +27,7 @@ export class WorldCupApiService {
 		return this.matches;
 	}
 
-	public getGroupStageMatches(): Observable<Match[]> {
+	public getDeterminedMatches(): Observable<Match[]> {
 		return this.getMatches().pipe(
 			map(matches => matches.filter(m => m.home_team.code !== "TBD" && m.away_team.code !== "TBD"))
 		);

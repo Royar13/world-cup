@@ -36,6 +36,7 @@
 			</td>
 			<td>
 				{{contestant.score}}
+				<i class="fa fa-exclamation-circle missing-bets-icon" title="חסרים ניחושים" *ngIf="!contestantStandingsService.hasAllBets(contestant)"></i>
 			</td>
 			<td>
 				<div *ngIf="executingDeleteId!==contestant.id">

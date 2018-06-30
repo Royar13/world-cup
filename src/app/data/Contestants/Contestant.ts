@@ -7,7 +7,7 @@ export class Contestant {
 	public previousScore: number = 0;
 	public rank: number = 0;
 	public previousRank: number = 0;
-	public groupStageBets: Bet[] = new Array();
+	public bets: Bet[] = new Array();
 
 	constructor(id: number, name: string) {
 		this.id = id;

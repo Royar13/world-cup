@@ -40,7 +40,7 @@ export class MatchesBetsService {
 
 	private getBets(): Promise<Bet[]> {
 		let promise = new Promise<Bet[]>((resolve, reject) => {
-			let matchesObservable = this.worldCupApiService.getGroupStageMatches();
+			let matchesObservable = this.worldCupApiService.getDeterminedMatches();
 			let countriesObservable = this.countriesApiService.getCountries();
 			let betsObservable = this.betsApiService.getBetsContestant(this.contestantId);
 			forkJoin(matchesObservable, countriesObservable, betsObservable).subscribe(results => {

@@ -27,7 +27,7 @@ export class ContestantStandingsService {
 		let promise = new Promise<Contestant[]>((resolve, reject) => {
 			let contestantsObservable = this.contestansApiService.getContestants();
 			let betsObservable = this.betsApiService.getBets();
-			let matchesObservable = this.worldCupApiService.getGroupStageMatches();
+			let matchesObservable = this.worldCupApiService.getDeterminedMatches();
 
 			forkJoin(contestantsObservable, betsObservable, matchesObservable).subscribe(results => {
 				let contestants: Contestant[] = results[0];
@@ -39,7 +39,7 @@ export class ContestantStandingsService {
 
 				this.contestants = contestants
 					.map((contestant): Contestant => {
-						contestant.groupStageBets = bets.filter(b => b.contestant_id === contestant.id);
+						contestant.bets = bets.filter(b => b.contestant_id === contestant.id);
 						contestant.score = this.calculateScore(contestant);
 						contestant.previousScore = this.calculatePreviousScore(contestant);
 						return contestant;
@@ -110,7 +110,7 @@ export class ContestantStandingsService {
 	}
 
 	private calculateScore(contestant: Contestant): number {
-		return this.calculatesBetsScore(contestant.groupStageBets);
+		return this.calculatesBetsScore(contestant.bets);
 	}
 
 	private calculatePreviousScore(contestant: Contestant): number {
@@ -122,7 +122,7 @@ export class ContestantStandingsService {
 		}
 		lastMatchIndex = (lastMatchIndex >= numOfGamesAgo) ? lastMatchIndex - numOfGamesAgo : 0;
 		let lastMatch: Match = this.matches[lastMatchIndex];
-		let slicedBets: Bet[] = contestant.groupStageBets.filter(bet => bet.match.datetime < lastMatch.datetime);
+		let slicedBets: Bet[] = contestant.bets.filter(bet => bet.match.datetime < lastMatch.datetime);
 		return this.calculatesBetsScore(slicedBets);
 	}
 
@@ -175,5 +175,10 @@ export class ContestantStandingsService {
 			}
 			contestant.previousRank = previousRank;
 		});
+	}
+
+
+	public hasAllBets(contestant: Contestant): boolean {
+		return contestant.bets.length === this.matches.length;
 	}
 }
