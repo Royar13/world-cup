@@ -13,6 +13,7 @@ import { Stage } from '../data/WorldCupApi/Stage';
 })
 export class MatchesBetsComponent implements OnInit, OnDestroy, CanComponentDeactivate {
 	public loading: boolean = true;
+	public loadingError: boolean = false;
 	private subs: Subscription[] = new Array();
 	public stageEnum = Stage;
 
@@ -22,8 +23,11 @@ export class MatchesBetsComponent implements OnInit, OnDestroy, CanComponentDeac
 	ngOnInit() {
 		this.subs.push(this.route.params.subscribe(params => {
 			this.loading = true;
+			this.loadingError = false;
 			this.matchesBetsService.init(parseInt(params["id"])).then(() => {
 				this.loading = false;
+			}, () => {
+				this.loadingError = true;
 			});
 		}));
 	}

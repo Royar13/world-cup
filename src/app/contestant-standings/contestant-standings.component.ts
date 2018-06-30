@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class ContestantStandingsComponent implements OnInit {
 	public loading: boolean = true;
+	public loadingError: boolean = false;
 	public addMode: boolean = false;
 	public executingSave: boolean = false;
 	public executingDeleteId: number;
@@ -23,6 +24,8 @@ export class ContestantStandingsComponent implements OnInit {
 	ngOnInit() {
 		this.contestantStandingsService.init().then(() => {
 			this.loading = false;
+		}, () => {
+			this.loadingError = true;
 		});
 	}
 

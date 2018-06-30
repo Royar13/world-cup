@@ -1,0 +1,6 @@
+<i *ngIf="!error" class="fa fa-spinner fa-spin"></i>
+<p *ngIf="error">
+	ארעה שגיאה בטעינת הדף.
+	<br> אנא
+	<a (click)="refreshPage()">נסה שוב</a>.
+</p>

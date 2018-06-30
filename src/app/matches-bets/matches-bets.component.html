@@ -1,6 +1,4 @@
-<div class="loading" *ngIf="loading">
-	<i class="fa fa-spinner fa-spin"></i>
-</div>
+<app-loading *ngIf="loading" [error]="loadingError"></app-loading>
 <div class="content" *ngIf="!loading">
 	<h2>
 		הניחושים של {{matchesBetsService.contestant.name}}

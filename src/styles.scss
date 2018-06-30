@@ -18,6 +18,12 @@ h2 {
 	margin-bottom: 8px;
 }
 
+a {
+	color: blue;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 .btn {
 	background: none;
     color: inherit;
@@ -55,9 +61,4 @@ h2 {
 	font-size: 12px;
 	text-align: right;
 	height: 15px;
-}
-
-.loading {
-	font-size: 50px;
-	padding: 10px;
 }
