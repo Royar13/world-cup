@@ -1,8 +1,9 @@
 import { Team } from "./Team";
+import { Stage } from "./Stage";
 
 export class Match {
 	public fifa_id: number;
-	public stage_name: string;
+	public stage_name: Stage;
 	public status: string;
 	public datetime: number;
 	public home_team: Team;
@@ -17,5 +18,9 @@ export class Match {
 		match.home_team = Team.fromJSON(match.home_team);
 		match.away_team = Team.fromJSON(match.away_team);
 		return match;
+	}
+
+	public hasCountry(code: string): boolean {
+		return this.home_team.code === code || this.away_team.code === code;
 	}
 }

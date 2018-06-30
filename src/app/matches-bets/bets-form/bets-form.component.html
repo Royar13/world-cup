@@ -33,7 +33,7 @@
 				{{bet.match.home_team.hebrewName}}
 			</td>
 			<td class="bet-init">
-				<span class="choose-bet-winner" *ngIf="stages.indexOf('First stage')<0">
+				<span class="choose-bet-winner" *ngIf="stages.indexOf(stageEnum.Groups)<0">
 					<input type="radio" class="bet-field" *ngIf="showChooseBetWinner(bet)" [name]="'winner-code'+i" [value]="bet.match.home_team.code"
 					 [(ngModel)]="bet.winner_country_code" required>
 				</span>
@@ -41,7 +41,7 @@
 				 [disabled]="executingSave" required #homeTeamBet="ngModel"> -
 				<input type="number" [name]="'away-team-bet'+i" class="bet-field away-team-bet" min="0" max="100" [(ngModel)]="bet.away_team_goals"
 				 [disabled]="executingSave" required #awayTeamBet="ngModel">
-				<span class="choose-bet-winner" *ngIf="stages.indexOf('First stage')<0">
+				<span class="choose-bet-winner" *ngIf="stages.indexOf(stageEnum.Groups)<0">
 					<input type="radio" class="bet-field" *ngIf="showChooseBetWinner(bet)" [name]="'winner-code'+i" [value]="bet.match.away_team.code"
 					 [(ngModel)]="bet.winner_country_code" required>
 				</span>

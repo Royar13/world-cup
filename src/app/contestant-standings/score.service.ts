@@ -2,20 +2,20 @@ import { Injectable } from '@angular/core';
 import { Contestant } from '../data/Contestants/Contestant';
 import { Bet } from '../data/Bets/Bet';
 import { Match } from '../data/WorldCupApi/Match';
+import { Stage } from '../data/WorldCupApi/Stage';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class ScoreService {
 	private stageModifier: Map<string, number> = new Map([
-		["First stage", 1],
-		["Round of 16", 2],
-		["Quarter-finals", 3],
-		["Semi-finals", 4],
-		["Final", 5],
-		["Play-off for third place", 4]
+		[Stage.Groups, 1],
+		[Stage.RoundOf16, 2],
+		[Stage.QuarterFinals, 3],
+		[Stage.SemiFinals, 4],
+		[Stage.Final, 5],
+		[Stage.ThirdPlace, 4]
 	]);
-	private cupWinnerBetScore: number = 10;
 
 	constructor() { }
 
@@ -36,7 +36,7 @@ export class ScoreService {
 		let score: number = 0;
 		bets.forEach(bet => {
 			if (bet.match.status === "completed") {
-				if (bet.match.stage_name === "First stage") {
+				if (bet.match.stage_name === Stage.Groups) {
 					score += this.calculateGroupStageScore(bet);
 				}
 				else {
@@ -45,9 +45,24 @@ export class ScoreService {
 			}
 		});
 		if (cupWinnerBet !== null) {
-			let finalMatch: Match = allMatches.find(m => m.stage_name === "Final");
-			if (finalMatch !== undefined && finalMatch.winner_code === cupWinnerBet) {
-				score += this.cupWinnerBetScore;
+			//let reachedSemiFinals: boolean = allMatches.filter(m => m.stage_name === Stage.Final);
+			let finalMatch: Match = allMatches.find(m => m.stage_name === Stage.Final);
+			if (finalMatch !== undefined && finalMatch.hasCountry(cupWinnerBet)) {
+				if (finalMatch.winner_code === cupWinnerBet) {
+					score += 10;
+				}
+				else {
+					score += 6;
+				}
+			}
+			else {
+				let thirdPlaceMatch: Match = allMatches.find(m => m.stage_name === Stage.ThirdPlace);
+				if (thirdPlaceMatch !== undefined && thirdPlaceMatch.winner_code === cupWinnerBet) {
+					score += 4;
+				}
+				else if (allMatches.some(m => m.stage_name === Stage.SemiFinals && m.hasCountry(cupWinnerBet))) {
+					score += 2;
+				}
 			}
 		}
 		return score;

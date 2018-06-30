@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormControl, ValidationErrors } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CanComponentDeactivate } from '../common/can-deactivate-guard.service';
+import { Stage } from '../data/WorldCupApi/Stage';
 
 @Component({
 	selector: 'app-matches-bets',
@@ -13,6 +14,7 @@ import { CanComponentDeactivate } from '../common/can-deactivate-guard.service';
 export class MatchesBetsComponent implements OnInit, OnDestroy, CanComponentDeactivate {
 	public loading: boolean = true;
 	private subs: Subscription[] = new Array();
+	public stageEnum = Stage;
 
 	constructor(public matchesBetsService: MatchesBetsService, private route: ActivatedRoute) {
 	}

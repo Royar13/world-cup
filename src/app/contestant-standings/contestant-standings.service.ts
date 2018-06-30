@@ -7,6 +7,7 @@ import { Bet } from '../data/Bets/Bet';
 import { WorldCupApiService } from '../data/WorldCupApi/world-cup-api.service';
 import { Match } from '../data/WorldCupApi/Match';
 import { ScoreService } from './score.service';
+import { Stage } from '../data/WorldCupApi/Stage';
 
 @Injectable({
 	providedIn: 'root'
@@ -137,6 +138,16 @@ export class ContestantStandingsService {
 
 
 	public hasAllBets(contestant: Contestant): boolean {
-		return contestant.bets.length === this.matches.length;
+		let hasAllBets: boolean = contestant.bets.length === this.matches.length;
+		if (hasAllBets) {
+			let hasRoundOf16Ended: boolean = this.hasRoundOf16Ended();
+			//force having the cup winner bet after round of 16 
+			hasAllBets = !hasRoundOf16Ended || contestant.winner_bet_country_code !== null;
+		}
+		return hasAllBets;
+	}
+
+	private hasRoundOf16Ended(): boolean {
+		return this.matches.every(m => m.stage_name !== Stage.RoundOf16 || m.status === "completed");
 	}
 }
