@@ -10,11 +10,11 @@ import { Stage } from '../data/WorldCupApi/Stage';
 export class ScoreService {
 	private stageModifier: Map<string, number> = new Map([
 		[Stage.Groups, 1],
-		[Stage.RoundOf16, 2],
-		[Stage.QuarterFinals, 3],
-		[Stage.SemiFinals, 4],
-		[Stage.Final, 5],
-		[Stage.ThirdPlace, 4]
+		[Stage.RoundOf16, 1],
+		[Stage.QuarterFinals, 2],
+		[Stage.SemiFinals, 2],
+		[Stage.Final, 2],
+		[Stage.ThirdPlace, 2]
 	]);
 
 	constructor() { }
@@ -35,7 +35,7 @@ export class ScoreService {
 	public calculateBetsScore(bets: Bet[], cupWinnerBet: string, allMatches: Match[]): number {
 		let score: number = 0;
 		bets.forEach(bet => {
-			if (bet.match.status === "completed") {
+			if (bet.isFilled() && bet.match.status === "completed") {
 				if (bet.match.stage_name === Stage.Groups) {
 					score += this.calculateGroupStageScore(bet);
 				}
@@ -52,16 +52,16 @@ export class ScoreService {
 					score += 10;
 				}
 				else {
-					score += 6;
+					score += 7;
 				}
 			}
 			else {
 				let thirdPlaceMatch: Match = allMatches.find(m => m.stage_name === Stage.ThirdPlace);
 				if (thirdPlaceMatch !== undefined && thirdPlaceMatch.winner_code === cupWinnerBet) {
-					score += 4;
+					score += 5;
 				}
 				else if (allMatches.some(m => m.stage_name === Stage.SemiFinals && m.hasCountry(cupWinnerBet))) {
-					score += 2;
+					score += 3;
 				}
 			}
 		}
@@ -93,6 +93,7 @@ export class ScoreService {
 
 	private calculateKnockoutStageScore(bet: Bet): number {
 		let score = 0;
+		let allowModifier: boolean = true;
 		if (bet.home_team_goals === bet.away_team_goals) {
 			if (bet.match.home_team.goals === bet.match.away_team.goals) {
 				//game reached penalties
@@ -107,11 +108,33 @@ export class ScoreService {
 				}
 			}
 		}
-		else {
-			//in case of a non-drawn game, the score is calculated the same as the group stage
-			score = this.calculateGroupStageScore(bet);
+		else if (bet.home_team_goals === bet.match.home_team.goals && bet.away_team_goals === bet.match.away_team.goals) {
+			score = 3;
 		}
-		score *= this.stageModifier.get(bet.match.stage_name);
+		else if (bet.home_team_goals - bet.away_team_goals === bet.match.home_team.goals - bet.match.away_team.goals) {
+			score = 2;
+		}
+
+		if (score === 0) {
+			let guessedWinner: string;
+			if (bet.winner_country_code !== null) {
+				guessedWinner = bet.winner_country_code;
+			}
+			else {
+				guessedWinner = (bet.home_team_goals > bet.away_team_goals) ? bet.match.home_team.code : bet.match.away_team.code;
+			}
+
+			if (bet.match.winner_code === guessedWinner) {
+				score = 1;
+				if (Math.sign(bet.home_team_goals - bet.away_team_goals) !== Math.sign(bet.match.home_team.goals - bet.match.away_team.goals)) {
+					allowModifier = false;
+				}
+			}
+		}
+
+		if (allowModifier) {
+			score *= this.stageModifier.get(bet.match.stage_name);
+		}
 		return score;
 	}
 }
