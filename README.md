@@ -1,6 +1,7 @@
 # WorldCup
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
+The server-side was built on Wamp 3.0.4 (PHP v.7.0.4, MySQL v.5.7.11, Apache v.2.4.18).
 
 ## Development server
 
