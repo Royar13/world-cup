@@ -27,7 +27,7 @@
 				{{bet.match.datetime | date:'dd/MM/yy HH:mm':'':'he'}}
 			</td>
 			<td class="home-team-icon-init">
-				<img class="team-icon home-team-icon" [src]="'/assets/img/flags/'+bet.match.home_team.code+'.png'">
+				<img class="team-icon home-team-icon" [src]="'assets/img/flags/'+bet.match.home_team.code+'.png'">
 			</td>
 			<td>
 				{{bet.match.home_team.hebrewName}}
@@ -50,7 +50,7 @@
 				{{bet.match.away_team.hebrewName}}
 			</td>
 			<td class="away-team-icon-init">
-				<img class="team-icon away-team-icon" [src]="'/assets/img/flags/'+bet.match.away_team.code+'.png'">
+				<img class="team-icon away-team-icon" [src]="'assets/img/flags/'+bet.match.away_team.code+'.png'">
 			</td>
 			<td>
 				<span *ngIf="bet.match.status==='completed'">{{bet.match.home_team.goals}} - {{bet.match.away_team.goals}}</span>
