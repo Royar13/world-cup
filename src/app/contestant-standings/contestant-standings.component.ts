@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ContestantStandingsService } from './contestant-standings.service';
 import { Contestant } from '../data/Contestants/Contestant';
 import { Router } from '@angular/router';
+import { Stage } from '../data/WorldCupApi/Stage';
 
 @Component({
 	selector: 'app-contestants-rank',
@@ -16,6 +17,7 @@ export class ContestantStandingsComponent implements OnInit {
 	public executingDeleteId: number;
 	public nameField: string;
 	public errorMsg: string;
+	public stageEnum = Stage;
 
 	constructor(public contestantStandingsService: ContestantStandingsService, private router: Router) {
 

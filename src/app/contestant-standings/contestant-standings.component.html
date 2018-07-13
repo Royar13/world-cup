@@ -11,8 +11,26 @@
 			<th class="contestant-name">
 				שם
 			</th>
-			<th>
+			<th class="score">
 				ניקוד
+			</th>
+			<th class="score">
+				בתים
+			</th>
+			<th class="score">
+				שמינית
+			</th>
+			<th class="score">
+				רבע
+			</th>
+			<th class="score">
+				חצי
+			</th>
+			<th class="score">
+				גמר
+			</th>
+			<th class="score">
+				זוכה
 			</th>
 			<th></th>
 		</tr>
@@ -32,9 +50,30 @@
 			<td class="contestant-name">
 				{{contestant.name}}
 			</td>
-			<td>
-				{{contestant.score}}
+			<td class="score">
+				{{contestant.score.total}}
 				<i class="fa fa-exclamation-circle missing-bets-icon" title="חסרים ניחושים" *ngIf="!contestantStandingsService.hasAllBets(contestant)"></i>
+			</td>
+			<td class="score">
+				{{contestant.score.getScoreByStage(stageEnum.Groups)}}
+			</td>
+			<td class="score">
+				{{contestant.score.getScoreByStage(stageEnum.RoundOf16)}}
+			</td>
+			<td class="score">
+				{{contestant.score.getScoreByStage(stageEnum.QuarterFinals)}}
+			</td>
+			<td class="score">
+				{{contestant.score.getScoreByStage(stageEnum.SemiFinals)}}
+			</td>
+			<td class="score">
+				{{contestant.score.getScoreByStage(stageEnum.Final)}}
+			</td>
+			<td class="score">
+				{{contestant.score.getScoreByStage("WinnerBet")}}
+				<span *ngIf="contestant.winnerBetHebrewName!==undefined">
+					- {{contestant.winnerBetHebrewName}}
+				</span>
 			</td>
 			<td>
 				<div *ngIf="executingDeleteId!==contestant.id">
@@ -54,7 +93,7 @@
 			<td>
 				<input type="text" class="name-field" *ngIf="addMode" [(ngModel)]="nameField" [disabled]="executingSave">
 			</td>
-			<td colspan="2">
+			<td colspan="8">
 				<button *ngIf="!addMode" class="btn add-contestant-btn" (click)="addContestantOnClick()">
 					<i class="fa fa-plus"></i>
 				</button>

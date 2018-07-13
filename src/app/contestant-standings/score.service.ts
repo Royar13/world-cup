@@ -3,6 +3,7 @@ import { Contestant } from '../data/Contestants/Contestant';
 import { Bet } from '../data/Bets/Bet';
 import { Match } from '../data/WorldCupApi/Match';
 import { Stage } from '../data/WorldCupApi/Stage';
+import { Score } from '../data/Bets/Score';
 
 @Injectable({
 	providedIn: 'root'
@@ -19,7 +20,7 @@ export class ScoreService {
 
 	constructor() { }
 
-	public calculatePreviousScore(bets: Bet[], cupWinnerBet: string, allMatches: Match[]): number {
+	public calculatePreviousScore(bets: Bet[], cupWinnerBet: string, allMatches: Match[]): Score {
 		let numOfGamesAgo: number = 5;
 		//get all the games before this match index
 		let lastMatchIndex: number = allMatches.findIndex(m => m.status !== "completed");
@@ -32,15 +33,15 @@ export class ScoreService {
 		return this.calculateBetsScore(slicedBets, cupWinnerBet, allMatches);
 	}
 
-	public calculateBetsScore(bets: Bet[], cupWinnerBet: string, allMatches: Match[]): number {
-		let score: number = 0;
+	public calculateBetsScore(bets: Bet[], cupWinnerBet: string, allMatches: Match[]): Score {
+		let score: Score = new Score();
 		bets.forEach(bet => {
 			if (bet.isFilled() && bet.match.status === "completed") {
 				if (bet.match.stage_name === Stage.Groups) {
-					score += this.calculateGroupStageScore(bet);
+					score.addPoints(bet.match.stage_name, this.calculateGroupStageScore(bet));
 				}
 				else {
-					score += this.calculateKnockoutStageScore(bet);
+					score.addPoints(bet.match.stage_name, this.calculateKnockoutStageScore(bet));
 				}
 			}
 		});
@@ -49,19 +50,19 @@ export class ScoreService {
 			let finalMatch: Match = allMatches.find(m => m.stage_name === Stage.Final);
 			if (finalMatch !== undefined && finalMatch.hasCountry(cupWinnerBet)) {
 				if (finalMatch.winner_code === cupWinnerBet) {
-					score += 10;
+					score.addPoints("WinnerBet", 10);
 				}
 				else {
-					score += 7;
+					score.addPoints("WinnerBet", 7);
 				}
 			}
 			else {
 				let thirdPlaceMatch: Match = allMatches.find(m => m.stage_name === Stage.ThirdPlace);
 				if (thirdPlaceMatch !== undefined && thirdPlaceMatch.winner_code === cupWinnerBet) {
-					score += 5;
+					score.addPoints("WinnerBet", 5);
 				}
 				else if (allMatches.some(m => m.stage_name === Stage.SemiFinals && m.hasCountry(cupWinnerBet))) {
-					score += 3;
+					score.addPoints("WinnerBet", 3);
 				}
 			}
 		}

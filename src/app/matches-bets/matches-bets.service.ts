@@ -9,6 +9,7 @@ import { Contestant } from '../data/Contestants/Contestant';
 import { ContestantsApiService } from '../data/Contestants/contestants-api.service';
 import { BetsApiService } from '../data/Bets/bets-api.service';
 import { ScoreService } from '../contestant-standings/score.service';
+import { Score } from '../data/Bets/Score';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,7 +22,7 @@ export class MatchesBetsService {
 	public originalBets: Bet[] = new Array();
 	public originalCupWinnerBet: string = null;
 	public bets: Bet[] = new Array();
-	public contestantScore: number;
+	public contestantScore: Score;
 
 	constructor(private worldCupApiService: WorldCupApiService, private countriesApiService: CountriesApiService, private contestantsApiService: ContestantsApiService,
 		private betsApiService: BetsApiService, private scoreService: ScoreService) {

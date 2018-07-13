@@ -8,6 +8,8 @@ import { WorldCupApiService } from '../data/WorldCupApi/world-cup-api.service';
 import { Match } from '../data/WorldCupApi/Match';
 import { ScoreService } from './score.service';
 import { Stage } from '../data/WorldCupApi/Stage';
+import { CountriesApiService } from '../data/Countries/countries-api.service';
+import { Country } from '../data/Countries/Country';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,7 +20,7 @@ export class ContestantStandingsService {
 	public contestantsStandings: Contestant[] = new Array();
 
 	constructor(private contestansApiService: ContestantsApiService, private betsApiService: BetsApiService, private worldCupApiService: WorldCupApiService,
-		private scoreService: ScoreService) {
+		private scoreService: ScoreService, private countriesApiService: CountriesApiService) {
 
 	}
 
@@ -31,11 +33,14 @@ export class ContestantStandingsService {
 			let contestantsObservable = this.contestansApiService.getContestants();
 			let betsObservable = this.betsApiService.getBets();
 			let matchesObservable = this.worldCupApiService.getDeterminedMatches();
+			let countriesObservable = this.countriesApiService.getCountries();
 
-			forkJoin(contestantsObservable, betsObservable, matchesObservable).subscribe(results => {
+			forkJoin(contestantsObservable, betsObservable, matchesObservable, countriesObservable).subscribe(results => {
 				let contestants: Contestant[] = results[0];
 				let bets: Bet[] = results[1];
 				this.matches = results[2];
+				let countries: Country[] = results[3];
+
 				bets.forEach(bet => {
 					bet.match = this.matches.find(m => m.fifa_id === bet.fifa_match_id);
 				});
@@ -45,6 +50,10 @@ export class ContestantStandingsService {
 						contestant.bets = bets.filter(b => b.contestant_id === contestant.id);
 						contestant.score = this.scoreService.calculateBetsScore(contestant.bets, contestant.winner_bet_country_code, this.matches);
 						contestant.previousScore = this.scoreService.calculatePreviousScore(contestant.bets, contestant.winner_bet_country_code, this.matches);
+						let winnerBetCountry: Country = countries.find(c => c.fifa_code === contestant.winner_bet_country_code);
+						if (winnerBetCountry !== undefined) {
+							contestant.winnerBetHebrewName = winnerBetCountry.hebrew_name;
+						}
 						return contestant;
 					});
 
@@ -86,10 +95,10 @@ export class ContestantStandingsService {
 	}
 
 	private compareContestants(a: Contestant, b: Contestant): number {
-		if (b.score > a.score) {
+		if (b.score.total > a.score.total) {
 			return 1;
 		}
-		else if (b.score < a.score) {
+		else if (b.score.total < a.score.total) {
 			return -1;
 		}
 		else {
@@ -98,10 +107,10 @@ export class ContestantStandingsService {
 	}
 
 	private compareContestantsPreviousScores(a: Contestant, b: Contestant): number {
-		if (b.previousScore > a.previousScore) {
+		if (b.previousScore.total > a.previousScore.total) {
 			return 1;
 		}
-		else if (b.previousScore < a.previousScore) {
+		else if (b.previousScore.total < a.previousScore.total) {
 			return -1;
 		}
 		else {
@@ -118,7 +127,7 @@ export class ContestantStandingsService {
 		this.contestantsStandings = this.contestants.slice().sort(this.compareContestants);
 		let rank = 1;
 		this.contestantsStandings.forEach((contestant, index) => {
-			if (index > 0 && contestant.score < this.contestantsStandings[index - 1].score) {
+			if (index > 0 && contestant.score.total < this.contestantsStandings[index - 1].score.total) {
 				rank = index + 1;
 			}
 			contestant.rank = rank;
@@ -129,7 +138,7 @@ export class ContestantStandingsService {
 		let contestants = this.contestants.slice().sort(this.compareContestantsPreviousScores);
 		let previousRank = 1;
 		contestants.forEach((contestant, index) => {
-			if (index > 0 && contestant.previousScore < contestants[index - 1].previousScore) {
+			if (index > 0 && contestant.previousScore.total < contestants[index - 1].previousScore.total) {
 				previousRank = index + 1;
 			}
 			contestant.previousRank = previousRank;
