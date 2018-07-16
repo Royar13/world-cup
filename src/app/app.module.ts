@@ -16,6 +16,8 @@ import { TabComponent } from './common/tab-group/tab/tab.component';
 import { BetsFormComponent } from './matches-bets/bets-form/bets-form.component';
 import { CupWinnerBetComponent } from './matches-bets/cup-winner-bet/cup-winner-bet.component';
 import { LoadingComponent } from './common/loading/loading.component';
+import { WorldCupApiService } from './data/WorldCupApi/world-cup-api.service';
+import { CachedWorldCupApiService } from './data/WorldCupApi/cached-world-cup-api.service';
 
 registerLocaleData(localeHe);
 
@@ -38,7 +40,9 @@ registerLocaleData(localeHe);
 		AppRoutingModule
 	],
 	providers: [
-		{ provide: APP_CONFIG, useValue: AppConfig }
+		{ provide: APP_CONFIG, useValue: AppConfig },
+		//use the class CachedWorldCupApiService instead if the api shuts down, to load the cached results from file
+		{ provide: WorldCupApiService, useClass: WorldCupApiService }
 	],
 	bootstrap: [AppComponent]
 })

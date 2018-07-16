@@ -3,26 +3,21 @@ import { Match } from './Match';
 import { APP_CONFIG, IAppConfig } from '../AppConfig';
 import { HttpClient } from '@angular/common/http';
 import { map, shareReplay } from 'rxjs/operators';
-import { Country } from '../Countries/Country';
 import { Observable } from 'rxjs';
 
-@Injectable({
-	providedIn: 'root'
-})
-export class WorldCupApiService {
-	private matches: Observable<Match[]> = null;
+export abstract class WorldCupApi {
+	protected matches: Observable<Match[]> = null;
+	protected abstract get matchesUrl(): string;
 
-	constructor(@Inject(APP_CONFIG) private appConfig: IAppConfig, private http: HttpClient) {
-
+	constructor(protected http: HttpClient) {
 	}
 
 	public getMatches(): Observable<Match[]> {
 		if (this.matches === null) {
-			this.matches = this.http.get(this.appConfig.worldCupApiUrl + "/matches").pipe(
+			this.matches = this.http.get(this.matchesUrl).pipe(
 				map((res: any[]): Match[] => {
 					return res.map(m => Match.fromJSON(m));
 				}), shareReplay(1));
-
 		}
 		return this.matches;
 	}
@@ -31,5 +26,16 @@ export class WorldCupApiService {
 		return this.getMatches().pipe(
 			map(matches => matches.filter(m => m.home_team.code !== "TBD" && m.away_team.code !== "TBD"))
 		);
+	}
+}
+
+@Injectable()
+export class WorldCupApiService extends WorldCupApi {
+	protected get matchesUrl(): string {
+		return this.appConfig.worldCupApiUrl + "/matches";
+	}
+
+	constructor(http: HttpClient, @Inject(APP_CONFIG) private appConfig: IAppConfig) {
+		super(http);
 	}
 }
