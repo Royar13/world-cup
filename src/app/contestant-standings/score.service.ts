@@ -24,13 +24,14 @@ export class ScoreService {
 		let numOfGamesAgo: number = 5;
 		//get all the games before this match index
 		let lastMatchIndex: number = allMatches.findIndex(m => m.status !== "completed");
-		if (lastMatchIndex === undefined) {
+		if (lastMatchIndex === -1) {
 			lastMatchIndex = allMatches.length;
 		}
 		lastMatchIndex = (lastMatchIndex >= numOfGamesAgo) ? lastMatchIndex - numOfGamesAgo : 0;
 		let lastMatch: Match = allMatches[lastMatchIndex];
 		let slicedBets: Bet[] = bets.filter(bet => bet.match.datetime < lastMatch.datetime);
-		return this.calculateBetsScore(slicedBets, cupWinnerBet, allMatches);
+		let slicedMatches: Match[] = allMatches.filter(match => match.datetime < lastMatch.datetime);
+		return this.calculateBetsScore(slicedBets, cupWinnerBet, slicedMatches);
 	}
 
 	public calculateBetsScore(bets: Bet[], cupWinnerBet: string, allMatches: Match[]): Score {
@@ -46,7 +47,6 @@ export class ScoreService {
 			}
 		});
 		if (cupWinnerBet !== null) {
-			//let reachedSemiFinals: boolean = allMatches.filter(m => m.stage_name === Stage.Final);
 			let finalMatch: Match = allMatches.find(m => m.stage_name === Stage.Final);
 			if (finalMatch !== undefined && finalMatch.hasCountry(cupWinnerBet)) {
 				if (finalMatch.winner_code === cupWinnerBet) {
